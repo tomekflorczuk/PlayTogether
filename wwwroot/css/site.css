@@ -1,0 +1,394 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+a.navbar-brand {
+    white-space: normal;
+    word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+
+.btn-primary {
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+    color: #fff;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+    color: #fff;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html { font-size: 14px; }
+
+@media (min-width: 768px) {
+    html { font-size: 16px; }
+}
+
+.border-top { border-top: 1px solid #e5e5e5; }
+
+.border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html {
+    min-height: 100%;
+    position: relative;
+}
+
+body {
+    background: rgb(66, 66, 66);
+    background: linear-gradient(180deg, rgba(66, 66, 66, 1) 0%, rgba(106, 106, 106, 1) 73%, rgba(148, 148, 148, 1) 100%);
+    font-family: 'Poppins', sans-serif;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+.footer {
+    bottom: 0;
+    line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.bg-orangered { background: linear-gradient(90deg, rgba(255, 136, 0, 1) 0, rgba(255, 85, 0, 1) 49%, rgba(255, 0, 0, 1) 100%); }
+
+.btn {
+    margin-top: 1rem;
+    border: solid black 1px;
+    font-size: 1.2rem;
+}
+
+/*SideBar Styling*/
+
+#title-container {
+    width: 100vw;
+    text-align: center;
+    padding: 1.2rem 0 2.6rem 0;
+}
+
+#title-container .title {
+    color: red;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(to right, rgba(255, 136, 0, 1) 0, rgba(255, 85, 0, 1) 39%, rgba(255, 0, 0, 1) 100%);
+    -webkit-background-clip: text;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 2rem;
+    font-style: italic;
+    font-weight: bolder;
+    font-size: 3.7rem;
+}
+
+#login-container {
+    font-size: 0.8rem;
+    margin: 0 15rem;
+    border: solid orangered 0.2rem;
+    border-radius: 2rem;
+    background-color: rgba(66, 66, 66, 1);
+}
+
+#login-container p {
+    color: red;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(to right, rgba(255, 136, 0, 1) 0, rgba(255, 85, 0, 1) 39%, rgba(255, 0, 0, 1) 100%);
+    -webkit-background-clip: text;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#login-container .log p {
+    margin: 0.5rem 0 0 1.2rem;
+    text-align: left;
+}
+
+#login-container .sign p {
+    margin: 0.5rem 1.2rem 0 0;
+    text-align: right;
+}
+
+#login-container label {
+    width: 75%;
+    color: red;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(to right, rgba(255, 136, 0, 1) 0, rgba(255, 85, 0, 1) 39%, rgba(255, 0, 0, 1) 100%);
+    -webkit-background-clip: text;
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#login-container span {
+    text-align: left;
+    font-size: 0.9rem;
+    color: orangered;
+    margin-top: 1.5rem;
+}
+
+#login-container .bar { width: 75%; }
+
+#login-container .sign { text-align: right; }
+
+#login-container #reset-password-form { display: none; }
+
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+#sidebar {
+    background: linear-gradient(rgba(255, 136, 0, 1) 0, rgba(255, 85, 0, 1) 49%, rgba(255, 0, 0, 1) 100%);
+    background-color: rgb(255, 136, 0);
+    border-right: 3px solid black;
+    height: 100vh;
+    left: 0;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    transition: all 0.3s;
+    width: 120px;
+    z-index: 999;
+}
+
+#sidebar .sport-list-menu {
+    list-style-type: none;
+    padding: 10px 10px 0 10px;
+}
+
+#sidebar .sidebar-header {
+    color: darkred;
+    display: inline-block;
+    font-size: 2rem;
+    font-weight: 400;
+    padding: 20px;
+}
+
+#sidebar .sport-list-menu .sport-button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    color: darkred;
+    display: inline-block;
+    font-size: 3rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 0.375rem 0.75rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#sidebar .sidebar-header:hover {
+    background-color: coral;
+    font-size: 3.5rem;
+}
+
+#sidebar .sport-button:hover {
+    background-color: coral;
+    font-size: 3.5rem;
+}
+
+#sidebar .sport-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: 0;
+}
+
+#sidebar .author {
+    bottom: 0;
+    color: black;
+    font-size: 0.85rem;
+    font-weight: 500;
+    left: 2px;
+    position: absolute;
+    vertical-align: bottom;
+}
+
+#content {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 120px;
+    color: orangered;
+}
+
+#content .top-panel {
+    width: 100%;
+    padding: 0;
+}
+
+#content .title-button {
+    width: 17rem;
+    color: red;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(to right, rgba(255, 136, 0, 1) 0, rgba(255, 85, 0, 1) 49%, rgba(255, 0, 0, 1) 100%);
+    -webkit-background-clip: text;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 2rem;
+    font-style: italic;
+    font-weight: bolder;
+    padding-left: 0;
+    text-align: left;
+    word-break: keep-all;
+}
+
+#content .title-button:hover { font-size: 2.3rem; }
+
+#content .search-button {
+    background: transparent;
+    border: 1px solid transparent;
+    text-align: right;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    color: #4E3F3B;
+}
+
+#content .search-button:hover { font-size: 1.1rem; }
+
+#content .user {
+    position: fixed;
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+#content .user-button {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    font-size: 2.5rem;
+    color: orangered;
+}
+
+#content .user-button:hover { font-size: 2.8rem; }
+
+#content .user-button:focus { color: crimson; }
+
+#content .reload { padding-left: 3rem; }
+
+#content .reload-button {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    font-size: 2rem;
+    color: orangered;
+}
+
+#content .reload-button:hover { font-size: 2.5rem; }
+
+#content .logged-user { margin-left: 5rem; }
+
+#content .add-button {
+    position: fixed;
+    bottom: 0;
+    right: 0.5rem;
+    font-size: 4.5rem;
+    background: transparent;
+    color: orangered;
+}
+
+#content .add-button:hover { font-size: 4.7rem; }
+
+#content .add-button:focus { color: crimson; }
+
+#content #user-menu {
+    display: none;
+    position: fixed;
+    right: 0.7rem;
+    top: 4.7rem;
+    border: solid orangered 0.2rem;
+    border-radius: 1rem;
+    background-color: rgba(66, 66, 66, 1);
+}
+
+#content #user-menu ul {
+    width: 12rem;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#content #user-menu li {
+    text-align: center;
+    padding: 0.4rem 0;
+}
+
+#content #user-menu li:hover { font-size: 1.2rem; }
+
+#content #user-menu li button {
+    background: transparent;
+    border: 0;
+    color: inherit;
+}
+
+#content #user-menu .username {
+    padding: 0.5rem 0 0.3rem 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: rgba(66, 66, 66, 1);
+    background-color: orangered;
+    border-radius: 0.5rem;
+}
+
+#content .close-button {
+    font-size: 2rem;
+    text-align: right;
+    color: rgba(66, 66, 66, 1);
+    background: transparent;
+    border: 0;
+}
+
+#content #add-event-form {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    width: 50%;
+    height: fit-content;
+    padding: 0 1.5rem;
+    border: solid orangered 0.2rem;
+    border-radius: 1rem;
+    background-color: rgba(66, 66, 66, 1);
+    z-index: 1000;
+}
+
+#content #user-details-form {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    width: 50%;
+    height: 85%;
+    padding: 0;
+    border: solid orangered 0.2rem;
+    border-radius: 1rem;
+    background-color: rgba(66, 66, 66, 1);
+    z-index: 1000;
+}
+
+#content #user-details-form .user-details-header {
+    width: 100%;
+    height: fit-content;
+    padding: 0;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    vertical-align: middle;
+    color: rgba(66, 66, 66, 1);
+    background-color: orangered;
+    border-radius: 0.7rem;
+}
+
+#content #user-details-form label {
+    font-weight: bold;
+}

@@ -1,0 +1,99 @@
+﻿@page
+@model PlayTogether.Pages.LoggingModel;
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Log into the PlayTogether</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
+</head>
+<body>
+<div id="title-container">
+    <div class="title">PlayTogether</div>
+</div>
+<div id="login-container" class="row">
+    <div class="log col-sm-5">
+        <p>Log in</p>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label> Podaj login lub email</label>
+                <input asp-for="Users.Login" class="form-control bar"/>
+                <span asp-validation-for="Users.Login" asp-validation-for="Users.Email"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Users.Password" class=""></label>
+                <input asp-for="Users.Password" class="form-control bar"/>
+                <span asp-validation-for="Users.Password"></span>
+            </div>
+            <div class="form-group">
+                <input asp-page-handler="LogIn" type="submit" value="Log in" class="btn bg-orangered"/>
+            </div>
+            <div asp-validation-summary="ModelOnly"></div>
+        </form>
+        <button type="button">Reset Password</button>
+        <div id="reset-password-form">
+            <form method="post">
+                <div class="form-group">
+                    <label>Podaj nowe hasło</label>
+                    <input asp-for="Users.Password" class="form-control bar" />
+                    <span asp-validation-for="Users.Password"></span>
+                </div>
+                <div class="form-group">
+                    <label>Potwierdź hasło</label>
+                    <input asp-for="Users.Password" class="form-control bar" />
+                    <span asp-validation-for="Users.Password"></span>
+                </div>
+                <div>
+                    <input asp-page-handler="" type="submit" value="Confirm" class="btn bg-orangered"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="sign col-sm-7">
+        <p>Register</p>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label asp-for="Users.Login" class="control-label"></label>
+                <input asp-for="Users.Login" class="form-control"/>
+                <span asp-validation-for="Users.Login" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Users.Password" class="control-label"></label>
+                <input asp-for="Users.Password" class="form-control"/>
+                <span asp-validation-for="Users.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Users.Email" class="control-label"></label>
+                <input asp-for="Users.Email" class="form-control"/>
+                <span asp-validation-for="Users.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Players.FirstName" class="control-label"></label>
+                <input asp-for="Players.FirstName" class="form-control"/>
+                <span asp-validation-for="Players.FirstName"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Players.LastName" class="control-label"></label>
+                <input asp-for="Players.LastName" class="form-control"/>
+                <span asp-validation-for="Players.LastName"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Players.BirthDate" class="control-label"></label>
+                <input asp-for="Players.BirthDate" class="form-control"/>
+                <span asp-validation-for="Players.BirthDate"></span>
+            </div>
+            <div class="form-group">
+                <input asp-page-handler="SignUp" type="submit" value="Sign up" class="btn bg-orangered"/>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

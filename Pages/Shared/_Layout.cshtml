@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <ul class="sport-list-menu">
+            <li>
+                <button type="button" class="btn sidebar-header">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </li>
+            <li>
+                <button id="football-button" type="button" class="sport-button">
+                    <i class="fas fa-futbol"></i>
+                </button>
+            </li>
+            <li>
+                <button id="basketball-button" type="button" class="sport-button">
+                    <i class="fas fa-basketball-ball"></i>
+                </button>
+            </li>
+            <li>
+                <button id="volleyball-button" type="button" class="sport-button">
+                    <i class="fas fa-volleyball-ball"></i>
+                </button>
+            </li>
+        </ul>
+        <div class="author">
+            Tomasz Florczuk
+        </div>
+    </nav>
+    <!-- Content -->
+    <div id="content">
+        <header class="top-panel">
+            <nav class="navbar navbar-expand-md">
+                <div>
+                    <a class="navbar-brand nav-link title-button" asp-area="" asp-page="/Index">PlayTogether</a>
+                </div>
+                <form action="">
+                    <div class="pl-2 searchbar rounded rounded-pill input-group bg-orangered">
+                        <input type="search" placeholder="Szukaj..." class="form-control border-0 bg-transparent"/>
+                        <div class="input-group-append">
+                            <button type="submit" class="search-button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="reload">
+                    <button type="button" class="reload-button">
+                        <i class="fas fa-redo-alt"></i>
+                    </button>
+                </div>
+                <div id="user" class="user">
+                    <button id="user-button" type="button" class="user-button">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </nav>
+        </header>
+        <main role="main">
+            @RenderBody()
+        </main>
+        <div>
+            <button id="add-event-button" type="button" class="add-button border-0">
+                <i class="fas fa-plus-circle"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@RenderSection("Scripts", false)
+</body>
+</html>

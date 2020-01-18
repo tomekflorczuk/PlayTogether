@@ -1,0 +1,118 @@
+﻿@page
+@model MainModel;
+@{
+    ViewData["Title"] = "Your wall";
+}
+<div id="user-menu">
+    <ul>
+        <li class="username">@User.Identity.Name</li>
+        <li>
+            <button id="user-details-button" type="button">Your account</button>
+        </li>
+        <li>
+            <form method="post" role="form">
+                <button asp-page-handler="LogOut">Log Out</button>
+            </form>
+        </li>
+    </ul>
+</div>
+<div id="add-event-form">
+    <div class="user-details-header row">
+        <div class="col-sm-10 text-center mt-2 pt-1">Dodaj wydarzenie</div>
+        <button id="close-button" type="button" class="close-button col-sm-2">
+            <i class="fas fa-times-circle"></i>
+        </button>
+    </div>
+    <div class="p-2">
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label asp-for="Games.GameDate"></label>
+                <input asp-for="Games.GameDate" class="form-control bar"/>
+                <span asp-validation-for="Games.GameDate"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Games.GameLength"></label>
+                <input asp-for="Games.GameLength" class="form-control bar"/>
+                <span asp-validation-for="Games.GameLength"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Games.MaxPlayers"></label>
+                <input asp-for="Games.MaxPlayers" class="form-control bar"/>
+                <span asp-validation-for="Games.MaxPlayers"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Games.Price"></label>
+                <input asp-for="Games.Price" class="form-control bar"/>
+                <span asp-validation-for="Games.Price"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Games.Notes"></label>
+                <textarea rows="4" asp-for="Games.Notes" class="form-control bar"></textarea>
+                <span asp-validation-for="Games.Notes"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Games.Place"></label>
+                <input asp-for="Games.Place" class="form-control bar"/>
+                <span asp-validation-for="Games.Place"></span>
+            </div>
+            <div asp-validation-summary="ModelOnly"></div>
+            <div>
+                <button asp-page-handler="AddEvent" type="submit" class="btn bg-orangered">Add Event</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="user-details-form">
+    <div class="user-details-header row">
+        <div class="col-sm-10 text-center mt-2 pt-1">Edytuj dane użytkownika</div>
+        <button id="user-details-close-button" type="button" class="close-button col-sm-2">
+            <i class="fas fa-times-circle"></i>
+        </button>
+    </div>
+    <div class="p-2">
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Player.PlayerId"/>
+            <div>
+                <label asp-for="Player.FirstName"></label>
+                <input asp-for="Player.FirstName" class="form-control bar"/>
+                <span asp-validation-for="Player.FirstName"></span>
+            </div>
+            <div>
+                <label asp-for="Player.LastName"></label>
+                <input asp-for="Player.LastName" class="form-control bar"/>
+                <span asp-validation-for="Player.LastName"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Player.Nickname"></label>
+                <input asp-for="Player.Nickname" class="form-control bar"/>
+                <span asp-validation-for="Player.Nickname"></span>
+            </div>
+            <div>
+                <b>@Html.DisplayNameFor(model => model.Player.BirthDate):</b>
+                @Html.DisplayFor(model => model.Player.BirthDate)
+                <input type="hidden" asp-for="Player.BirthDate"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Player.Bio"></label>
+                <textarea rows="4" asp-for="Player.Bio" class="form-control bar"></textarea>
+                <span asp-validation-for="Player.Bio"></span>
+            </div>
+            <div>
+                <b>@Html.DisplayNameFor(model => model.Player.PointsOfTrust):</b>
+                @Html.DisplayFor(model => model.Player.PointsOfTrust)
+            </div>
+            <div>
+                <b>@Html.DisplayNameFor(model => model.Player.GamesAttended):</b>
+                @Html.DisplayFor(model => model.Player.GamesAttended)
+            </div>
+            <input type="hidden" asp-for="Player.Modified"/>
+            <input type="hidden" asp-for="Player.Users"/>
+            <div asp-validation-summary="ModelOnly"></div>
+            <div>
+                <button asp-page-handler="UserDetails" type="submit" class="btn bg-orangered text-center">Confirm</button>
+            </div>
+        </form>
+    </div>
+</div>
