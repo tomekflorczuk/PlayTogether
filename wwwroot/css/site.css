@@ -392,3 +392,8 @@ body {
 #content #user-details-form label {
     font-weight: bold;
 }
+
+#content .game-component {
+    border: solid orangered 0.2rem;
+    border-radius: 1rem;
+}

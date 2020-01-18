@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 using PlayTogether.Models;
 using MySql.Data.MySqlClient;
@@ -19,10 +20,6 @@ namespace PlayTogether.Data
         {
         }
 
-        public int LoggedUserId { get; set; }
-
-        public int ChosedSportTypeId { get; set; }
-
         public virtual DbSet<Games> Games { get; set; }
         public virtual DbSet<GamesLog> GamesLog { get; set; }
         public virtual DbSet<Participants> Participants { get; set; }
@@ -32,6 +29,7 @@ namespace PlayTogether.Data
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<SportTypes> SportTypes { get; set; }
         public virtual DbSet<Surfaces> Surfaces { get; set; }
+        public virtual DbSet<UpcomingGame> UpcomingGames { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<UsersLog> UsersLog { get; set; }
 
@@ -766,7 +764,38 @@ namespace PlayTogether.Data
                     .HasCollation("utf8_general_ci");
             });
 
-            modelBuilder.Query<Logging>();
+            modelBuilder.Entity<Logging>(entity => { entity.HasNoKey(); });
+
+            modelBuilder.Entity<UpcomingGame>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToView("UpcomingActiveGames");
+                entity.Property(v => v.HostUser).HasColumnName("host_user");
+                entity.Property(v => v.GameDate).HasColumnName("game_date");
+                entity.Property(v => v.GameLength).HasColumnName("game_length");
+                entity.Property(v => v.GameType).HasColumnName("game_type");
+                entity.Property(v => v.MaxPlayers).HasColumnName("max_players");
+                entity.Property(v => v.Price).HasColumnName("price");
+                entity.Property(v => v.PlaceId).HasColumnName("place_id");
+                entity.Property(v => v.Created).HasColumnName("created");
+                entity.Property(v => v.Notes).HasColumnName("notes");
+            });
+
+            modelBuilder.Entity<Games>(entity =>
+            {
+                entity.ToView("UpcomingFootballActiveGames");
+                entity.Property(e => e.GameId).HasColumnName("game_id");
+                entity.Property(v => v.HostUser).HasColumnName("host_user");
+                entity.Property(v => v.GameDate).HasColumnName("game_date");
+                entity.Property(v => v.GameLength).HasColumnName("game_length");
+                entity.Property(v => v.GameType).HasColumnName("game_type");
+                entity.Property(v => v.MaxPlayers).HasColumnName("max_players");
+                entity.Property(v => v.Price).HasColumnName("price");
+                entity.Property(v => v.PlaceId).HasColumnName("place_id");
+                entity.Property(v => v.Created).HasColumnName("created");
+                entity.Property(v => v.Notes).HasColumnName("notes");
+                entity.Property(v => v.Modified).HasColumnName("modified");
+            });
 
             OnModelCreatingPartial(modelBuilder);
         }

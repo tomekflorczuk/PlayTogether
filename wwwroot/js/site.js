@@ -4,30 +4,69 @@
 // Write your Javascript code.
 
 $(document).ready(function() {
-    //Zmiana koloru wybranego sportu
-    $("#football-button").click(function() {
+    //Zmiana koloru oraz id wybranego sportu
+    $("#football-button").click(function(e) {
         $("#football-button").css("background-color", "crimson");
         $("#football-button").css("border", "solid darkred 0.2rem");
         $("#basketball-button").css("background", "transparent");
         $("#basketball-button").css("border", "0");
         $("#volleyball-button").css("background", "transparent");
         $("#volleyball-button").css("border", "0");
+
+        e.preventDefault();
+
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        $.ajax({
+            url: $(this).attr("formaction"),
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            type: "post"
+        });
     });
-    $("#basketball-button").click(function () {
+    $("#basketball-button").click(function(e) {
         $("#basketball-button").css("background-color", "crimson");
         $("#basketball-button").css("border", "solid darkred 0.2rem");
         $("#football-button").css("background", "transparent");
         $("#football-button").css("border", "0");
         $("#volleyball-button").css("background", "transparent");
         $("#volleyball-button").css("border", "0");
+
+        e.preventDefault();
+
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        $.ajax({
+            url: $(this).attr("formaction"),
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            type: "post"
+        });
     });
-    $("#volleyball-button").click(function () {
+    $("#volleyball-button").click(function(e) {
         $("#volleyball-button").css("background-color", "crimson");
         $("#volleyball-button").css("border", "solid darkred 0.2rem");
         $("#basketball-button").css("background", "transparent");
         $("#basketball-button").css("border", "0");
         $("#football-button").css("background", "transparent");
         $("#football-button").css("border", "0");
+
+        e.preventDefault();
+
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        $.ajax({
+            url: $(this).attr("formaction"),
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            type: "post"
+        });
     });
     //Wyświetlenie menu usera
     $("#user-button").click(function() {
@@ -35,8 +74,8 @@ $(document).ready(function() {
     });
     //Chowanie menu usera
     $(document).click(function(e) {
-        if ($(e.target).closest('button').attr('id') !== "user-button" &&
-            $(e.target).closest('div').attr('id') !== 'user-menu') {
+        if ($(e.target).closest("button").attr("id") !== "user-button" &&
+            $(e.target).closest("div").attr("id") !== "user-menu") {
             $("#user-menu").hide();
         }
     });

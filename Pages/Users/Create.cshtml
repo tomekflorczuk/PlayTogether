@@ -1,0 +1,47 @@
+﻿@page
+@model PlayTogether.Pages.Users.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Tworzenie użytkownika</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Users.Login" class="control-label"></label>
+                <input asp-for="Users.Login" class="form-control" />
+                <span asp-validation-for="Users.Login" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Users.Password" class="control-label"></label>
+                <input asp-for="Users.Password" class="form-control" />
+                <span asp-validation-for="Users.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Users.Email" class="control-label"></label>
+                <input asp-for="Users.Email" class="form-control" />
+                <span asp-validation-for="Users.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Users.PlayerId" class="control-label"></label>
+                <select asp-for="Users.PlayerId" class ="form-control" asp-items="ViewBag.PlayerId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

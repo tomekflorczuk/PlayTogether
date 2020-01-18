@@ -16,8 +16,6 @@ namespace PlayTogether.Pages
     [Authorize]
     public class MainModel : PageModel
     {
-        private int _loggedid;
-        
         private readonly Data.PtContext _context;
 
         public MainModel(Data.PtContext context)
@@ -25,13 +23,21 @@ namespace PlayTogether.Pages
             _context = context;
         }
 
-        [BindProperty] public Games Games { get; set; }
+        private int _loggedid;
+
+        private int choosedsporttype;
+
+        public List<UpcomingGame> UpcomingGames { get; set; }
+        [BindProperty] public Games Game { get; set; }
         [BindProperty] public Players Player { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int loggedid)
         {
             _loggedid = loggedid;
             Player = _context.Players.Single(p => p.PlayerId == loggedid);
+
+            UpcomingGames = new List<UpcomingGame>();
+            UpcomingGames = await _context.UpcomingGames.ToListAsync(); 
             /*Player = _context.Players.Join(
                 _context.Users,
                 player => player.PlayerId,
@@ -46,6 +52,25 @@ namespace PlayTogether.Pages
             */
             return Page();
         }
+
+        //Clicking FootballButton
+        public void OnPostFootballButton()
+        {
+            choosedsporttype = 1;
+        }
+        
+        //Clicking BasketballButton
+        public void OnPostBasketballButton()
+        {
+            choosedsporttype = 2;
+        }
+        
+        //Clicking VolleyballButton
+        public void OnPostVolleyballButton()
+        {
+            choosedsporttype = 3;
+        }
+        
         //SignOutButton
         public async Task<IActionResult> OnPostLogOut()
         {
@@ -56,16 +81,19 @@ namespace PlayTogether.Pages
             }
             catch (Exception ex)
             {
-                throw (ex);
+                throw ex;
             }
+
             return RedirectToPage("/Logging");
         }
+
         //AddEventButton
         public async Task<IActionResult> OnPostAddEvent()
         {
-            Games.HostUser = _loggedid;
+            Game.HostUser = _loggedid;
             return Page();
         }
+
         //ChangeUserDetails
         public async Task<IActionResult> OnPostUserDetails()
         {
@@ -89,8 +117,9 @@ namespace PlayTogether.Pages
             }
             catch (Exception ex)
             {
-                throw (ex);
+                throw ex;
             }
+
             return Page();
         }
     }

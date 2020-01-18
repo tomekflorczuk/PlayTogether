@@ -1,8 +1,25 @@
 ﻿@page
+@using Microsoft.CodeAnalysis.CSharp.Syntax
 @model MainModel;
 @{
     ViewData["Title"] = "Your wall";
 }
+<div id="upcoming-games">
+    @if (Model.UpcomingGames.Count == 0)
+    {
+        <div>There are no upcoming games</div>
+    }
+    else
+    {
+        <div class="row"></div>
+        @foreach (var game in Model.UpcomingGames)
+        {
+            <div class="game-component col-sm-4">
+
+            </div>
+        }
+    }
+</div>
 <div id="user-menu">
     <ul>
         <li class="username">@User.Identity.Name</li>
@@ -27,34 +44,34 @@
         <form method="post">
             @Html.AntiForgeryToken()
             <div class="form-group">
-                <label asp-for="Games.GameDate"></label>
-                <input asp-for="Games.GameDate" class="form-control bar"/>
-                <span asp-validation-for="Games.GameDate"></span>
+                <label asp-for="Game.GameDate"></label>
+                <input asp-for="Game.GameDate" class="form-control bar"/>
+                <span asp-validation-for="Game.GameDate"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Games.GameLength"></label>
-                <input asp-for="Games.GameLength" class="form-control bar"/>
-                <span asp-validation-for="Games.GameLength"></span>
+                <label asp-for="Game.GameLength"></label>
+                <input asp-for="Game.GameLength" class="form-control bar"/>
+                <span asp-validation-for="Game.GameLength"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Games.MaxPlayers"></label>
-                <input asp-for="Games.MaxPlayers" class="form-control bar"/>
-                <span asp-validation-for="Games.MaxPlayers"></span>
+                <label asp-for="Game.MaxPlayers"></label>
+                <input asp-for="Game.MaxPlayers" class="form-control bar"/>
+                <span asp-validation-for="Game.MaxPlayers"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Games.Price"></label>
-                <input asp-for="Games.Price" class="form-control bar"/>
-                <span asp-validation-for="Games.Price"></span>
+                <label asp-for="Game.Price"></label>
+                <input asp-for="Game.Price" class="form-control bar"/>
+                <span asp-validation-for="Game.Price"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Games.Notes"></label>
-                <textarea rows="4" asp-for="Games.Notes" class="form-control bar"></textarea>
-                <span asp-validation-for="Games.Notes"></span>
+                <label asp-for="Game.Notes"></label>
+                <textarea rows="4" asp-for="Game.Notes" class="form-control bar"></textarea>
+                <span asp-validation-for="Game.Notes"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Games.Place"></label>
-                <input asp-for="Games.Place" class="form-control bar"/>
-                <span asp-validation-for="Games.Place"></span>
+                <label asp-for="Game.Place"></label>
+                <input asp-for="Game.Place" class="form-control bar"/>
+                <span asp-validation-for="Game.Place"></span>
             </div>
             <div asp-validation-summary="ModelOnly"></div>
             <div>
