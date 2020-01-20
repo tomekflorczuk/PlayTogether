@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-//using MySqlX.XDevAPI.Relational;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PlayTogether.Models
 {
-    public partial class Surfaces
+    public partial class Cities
     {
-        public Surfaces()
+        public Cities()
         {
             Places = new HashSet<Places>();
         }
 
         [Key]
-        public sbyte SurfaceId { get; set; }
-        public string SurfaceName { get; set; }
+        public sbyte CityId { get; set; }
+        public string CityName { get; set; }
         public virtual ICollection<Places> Places { get; set; }
     }
 }

@@ -21,4 +21,9 @@ namespace PlayTogether.Models
     public partial class Games
     {
     }
+
+    [ModelMetadataType(typeof(PlaceMetadata))]
+    public partial class Places
+    {
+    }
 }

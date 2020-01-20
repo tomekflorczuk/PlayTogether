@@ -88,6 +88,12 @@ $(document).ready(function() {
     $("#user-details-close-button").click(function() {
         $("#user-details-form").hide();
     });
+    //Zatwierdzenie szczegółów usera
+
+    //Wyświetlanie menu wyboru pliku obrazu
+    $("#upload-picture-button").click(function (e) {
+        $("#file-chooser").click();
+    });
     //Wyświetlanie menu dodawania wydarzenia
     $("#add-event-button").click(function() {
         $("#user-details-form").hide();

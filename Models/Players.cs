@@ -18,7 +18,7 @@ namespace PlayTogether.Models
         public string LastName { get; set; }
         public string Nickname { get; set; }
         public DateTime BirthDate { get; set; }
-        //public string ProfilePicture { get; set; }
+        public string ProfilePicture { get; set; }
         public string Bio { get; set; }
         public int PointsOfTrust { get; set; }
         public int GamesAttended { get; set; }

@@ -7,7 +7,7 @@
 <div id="upcoming-games">
     @if (Model.UpcomingGames.Count == 0)
     {
-        <div>There are no upcoming games</div>
+        <div class="games-not-found">There are no upcoming games</div>
     }
     else
     {
@@ -82,29 +82,37 @@
 </div>
 <div id="user-details-form">
     <div class="user-details-header row">
-        <div class="col-sm-10 text-center mt-2 pt-1">Edytuj dane użytkownika</div>
+        <div class="col-sm-10 text-center mt-2 pt-1">Edit User Details</div>
         <button id="user-details-close-button" type="button" class="close-button col-sm-2">
             <i class="fas fa-times-circle"></i>
         </button>
     </div>
     <div class="p-2">
-        <form method="post">
+        <form enctype="multipart/form-data" method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Player.PlayerId"/>
-            <div>
-                <label asp-for="Player.FirstName"></label>
-                <input asp-for="Player.FirstName" class="form-control bar"/>
-                <span asp-validation-for="Player.FirstName"></span>
-            </div>
-            <div>
-                <label asp-for="Player.LastName"></label>
-                <input asp-for="Player.LastName" class="form-control bar"/>
-                <span asp-validation-for="Player.LastName"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Player.Nickname"></label>
-                <input asp-for="Player.Nickname" class="form-control bar"/>
-                <span asp-validation-for="Player.Nickname"></span>
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="form-group">
+                        <label asp-for="Player.FirstName"></label>
+                        <input asp-for="Player.FirstName" class="form-control bar"/>
+                        <span asp-validation-for="Player.FirstName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Player.LastName"></label>
+                        <input asp-for="Player.LastName" class="form-control bar"/>
+                        <span asp-validation-for="Player.LastName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Player.Nickname"></label>
+                        <input asp-for="Player.Nickname" class="form-control bar"/>
+                        <span asp-validation-for="Player.Nickname"></span>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <b>@Html.DisplayNameFor(model => model.Player.ProfilePicture)</b>
+                    <img/>
+                </div>
             </div>
             <div>
                 <b>@Html.DisplayNameFor(model => model.Player.BirthDate):</b>
@@ -127,8 +135,15 @@
             <input type="hidden" asp-for="Player.Modified"/>
             <input type="hidden" asp-for="Player.Users"/>
             <div asp-validation-summary="ModelOnly"></div>
-            <div>
-                <button asp-page-handler="UserDetails" type="submit" class="btn bg-orangered text-center">Confirm</button>
+            <div class="row">
+                <div class="col-sm-6">
+                    <button asp-page-handler="UserDetails" id="user-details-confirm" type="submit" class="btn bg-orangered text-center">Confirm</button>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <input asp-for="ProfilePicture.PictureFile" type="file" id="file-chooser" title="Select your profile picture"/>
+                    <button id="upload-picture-button" type="button" class="btn bg-orangered text-center">Upload picture</button>
+                    <div class="profile-picture-result">@Model.Result</div>
+                </div>
             </div>
         </form>
     </div>

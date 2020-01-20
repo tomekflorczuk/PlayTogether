@@ -22,7 +22,7 @@
         <form method="post">
             @Html.AntiForgeryToken()
             <div class="form-group">
-                <label> Podaj login lub email</label>
+                <label>Username or email address</label>
                 <input asp-for="Users.Login" class="form-control bar"/>
                 <span asp-validation-for="Users.Login" asp-validation-for="Users.Email"></span>
             </div>
@@ -31,10 +31,10 @@
                 <input asp-for="Users.Password" class="form-control bar"/>
                 <span asp-validation-for="Users.Password"></span>
             </div>
+            <div asp-validation-summary="ModelOnly" class="error"></div>
             <div class="form-group">
                 <input asp-page-handler="LogIn" type="submit" value="Log in" class="btn bg-orangered"/>
             </div>
-            <div asp-validation-summary="ModelOnly"></div>
         </form>
         <button type="button">Reset Password</button>
         <div id="reset-password-form">

@@ -495,6 +495,12 @@ namespace PlayTogether.Data
                 entity.Property(e => e.PointsOfTrust)
                     .HasColumnName("points_of_trust")
                     .HasColumnType("int(11)");
+
+                entity.Property(e => e.ProfilePicture)
+                    .HasColumnName("profile_picture")
+                    .HasColumnType("varchar(256)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
             });
 
             modelBuilder.Entity<Roles>(entity =>

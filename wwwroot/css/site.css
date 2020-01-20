@@ -74,6 +74,20 @@ body {
     font-size: 1.2rem;
 }
 
+.error {
+    color: crimson;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 0.3rem;
+}
+
+.error ul {
+    padding: 0;
+    margin: 0;
+}
+
+.error li { list-style-type: none; }
+
 /*SideBar Styling*/
 
 #title-container {
@@ -389,11 +403,18 @@ body {
     border-radius: 0.7rem;
 }
 
-#content #user-details-form label {
-    font-weight: bold;
-}
+#content #user-details-form label { font-weight: bold; }
+
+#content #user-details-form #file-chooser { display: none; }
 
 #content .game-component {
     border: solid orangered 0.2rem;
     border-radius: 1rem;
+}
+
+#content .games-not-found {
+    text-align: center;
+    font-weight: bold;
+    font-size: 3.5rem;
+    margin-top: 15rem;
 }
