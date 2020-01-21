@@ -24,16 +24,15 @@ namespace PlayTogether.Pages
         {
             _context = context;
         }
-
-        [BindProperty] private int Loggedid { get; set; }
-        [BindProperty] private int choosedsporttype { get; set; }
+        private int Loggedid { get; set; }
+        private sbyte Choosedsporttype { get; set; }
         [BindProperty] public ProfilePicture ProfilePicture { get; set; }
-
-        private string[] extensions = {".jpg", ".png"};
         public string Result { get; set; }
         [BindProperty] public List<UpcomingGame> UpcomingGames { get; set; }
         [BindProperty] public Games Game { get; set; }
         [BindProperty] public Players Player { get; set; }
+        [BindProperty] public Places Places { get; set; }
+        [BindProperty] public Cities Cities { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int loggedid)
         {
@@ -41,37 +40,26 @@ namespace PlayTogether.Pages
             Player = _context.Players.Single(p => p.PlayerId == loggedid);
 
             UpcomingGames = await _context.UpcomingGames.ToListAsync(); 
-            /*Player = _context.Players.Join(
-                _context.Users,
-                player => player.PlayerId,
-                user => user.PlayerId,
-                (player, user) => new
-                {
-                    FirstName = player.FirstName,
-                    LastName = player.LastName,
 
-                }).FirstOrDefault();
-
-            */
             return Page();
         }
 
         //Clicking FootballButton
         public void OnPostFootballButton()
         {
-            choosedsporttype = 1;
+            Choosedsporttype = 1;
         }
         
         //Clicking BasketballButton
         public void OnPostBasketballButton()
         {
-            choosedsporttype = 2;
+            Choosedsporttype = 2;
         }
         
         //Clicking VolleyballButton
         public void OnPostVolleyballButton()
         {
-            choosedsporttype = 3;
+            Choosedsporttype = 3;
         }
         
         //SignOutButton
@@ -94,6 +82,8 @@ namespace PlayTogether.Pages
         public async Task<IActionResult> OnPostAddEvent()
         {
             Game.HostUser = Loggedid;
+            Game.GameType = Choosedsporttype;
+
             return Page();
         }
 

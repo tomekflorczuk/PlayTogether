@@ -5,6 +5,10 @@
     <UserSecretsId>17e1a928-bfd5-4186-9f27-8d6586103c1f</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Google.Cloud.Storage.V1" Version="2.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
@@ -27,13 +31,6 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
-  <!--
-  <ItemGroup>
-    <None Update="app.yaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  -->
   <ItemGroup>
     <None Include="app.yaml" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

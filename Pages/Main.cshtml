@@ -1,9 +1,23 @@
 ﻿@page
 @using Microsoft.CodeAnalysis.CSharp.Syntax
+@using PlayTogether.Models
 @model MainModel;
 @{
     ViewData["Title"] = "Your wall";
 }
+<div id="user-menu">
+    <ul>
+        <li class="username">@User.Identity.Name</li>
+        <li>
+            <button id="user-details-button" type="button">Your account</button>
+        </li>
+        <li>
+            <form method="post" role="form">
+                <button asp-page-handler="LogOut">Log Out</button>
+            </form>
+        </li>
+    </ul>
+</div>
 <div id="upcoming-games">
     @if (Model.UpcomingGames.Count == 0)
     {
@@ -20,70 +34,101 @@
         }
     }
 </div>
-<div id="user-menu">
-    <ul>
-        <li class="username">@User.Identity.Name</li>
-        <li>
-            <button id="user-details-button" type="button">Your account</button>
-        </li>
-        <li>
-            <form method="post" role="form">
-                <button asp-page-handler="LogOut">Log Out</button>
-            </form>
-        </li>
-    </ul>
-</div>
 <div id="add-event-form">
-    <div class="user-details-header row">
-        <div class="col-sm-10 text-center mt-2 pt-1">Dodaj wydarzenie</div>
-        <button id="close-button" type="button" class="close-button col-sm-2">
+    <div class="add-event-header row">
+        <div class="col-sm-10 text-center mt-2 pt-1">Add Event</div>
+        <button id="add-event-close-button" type="button" class="close-button col-sm-2">
             <i class="fas fa-times-circle"></i>
         </button>
     </div>
     <div class="p-2">
         <form method="post">
             @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-7">
+                    <div class="form-group">
+                        <label asp-for="Game.GameDate"></label>
+                        <input asp-for="Game.GameDate" class="form-control bar"/>
+                        <span asp-validation-for="Game.GameDate"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Game.GameLength"></label>
+                        <input asp-for="Game.GameLength" class="form-control bar"/>
+                        <span asp-validation-for="Game.GameLength"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Game.Notes"></label>
+                        <textarea rows="6" asp-for="Game.Notes" class="form-control bar"></textarea>
+                        <span asp-validation-for="Game.Notes"></span>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="form-group">
+                        <label asp-for="Game.MaxPlayers"></label>
+                        <input asp-for="Game.MaxPlayers" class="form-control bar"/>
+                        <span asp-validation-for="Game.MaxPlayers"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Game.Price"></label>
+                        <input asp-for="Game.Price" class="form-control bar w-75 m-0" placeholder="PLN"/>
+                        <span asp-validation-for="Game.Price"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Game.Place"></label><br/>
+                        <button type="button" class="place-search">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    <div asp-validation-summary="ModelOnly"></div>
+                    <div class="text-center">
+                        <button asp-page-handler="AddEvent" type="submit" class="btn bg-orangered">Add Event</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="select-place-form">
+    <div id="select-place">
+        <div id="add-place">
+        <button type="button">
+
+        </button>
+    </div>
+</div>
+<div id="add-place-form" class="form">
+    <div class="form-header">
+        <div class="col-10 text-center mt-2 pt-1">Add new pitch</div>
+        <button id="add-place-close-button" type="button" class="col-2 close-button"></button>
+    </div>
+    <div class="p-2">
+        <form method="post">
+            @Html.AntiForgeryToken()
             <div class="form-group">
-                <label asp-for="Game.GameDate"></label>
-                <input asp-for="Game.GameDate" class="form-control bar"/>
-                <span asp-validation-for="Game.GameDate"></span>
+                <label asp-for="Places.City"></label>
+                <select asp-for="Places.City" asp-items="ViewBag.City"></select>
+                <span asp-validation-for="Places.City"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Game.GameLength"></label>
-                <input asp-for="Game.GameLength" class="form-control bar"/>
-                <span asp-validation-for="Game.GameLength"></span>
+                <label asp-for="Places.PlaceName"></label>
+                <input asp-for="Places.PlaceName"/>
+                <span asp-validation-for="Places.PlaceName"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Game.MaxPlayers"></label>
-                <input asp-for="Game.MaxPlayers" class="form-control bar"/>
-                <span asp-validation-for="Game.MaxPlayers"></span>
+                <label asp-for="Places.Surface"></label>
+                <select asp-for="Places.Surface" asp-items="ViewBag.Surface"></select>
+                <span asp-validation-for="Places.Surface"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Game.Price"></label>
-                <input asp-for="Game.Price" class="form-control bar"/>
-                <span asp-validation-for="Game.Price"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Game.Notes"></label>
-                <textarea rows="4" asp-for="Game.Notes" class="form-control bar"></textarea>
-                <span asp-validation-for="Game.Notes"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Game.Place"></label>
-                <input asp-for="Game.Place" class="form-control bar"/>
-                <span asp-validation-for="Game.Place"></span>
-            </div>
-            <div asp-validation-summary="ModelOnly"></div>
             <div>
-                <button asp-page-handler="AddEvent" type="submit" class="btn bg-orangered">Add Event</button>
+                <button id="add-place-button" type="submit" class="btn bg-orangered">Add place</button>
             </div>
         </form>
     </div>
 </div>
 <div id="user-details-form">
     <div class="user-details-header row">
-        <div class="col-sm-10 text-center mt-2 pt-1">Edit User Details</div>
-        <button id="user-details-close-button" type="button" class="close-button col-sm-2">
+        <div class="col-10 text-center mt-2 pt-1">Edit User Details</div>
+        <button id="user-details-close-button" type="button" class="col-2 close-button">
             <i class="fas fa-times-circle"></i>
         </button>
     </div>
@@ -92,7 +137,7 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Player.PlayerId"/>
             <div class="row">
-                <div class="col-sm-7">
+                <div class="col-7">
                     <div class="form-group">
                         <label asp-for="Player.FirstName"></label>
                         <input asp-for="Player.FirstName" class="form-control bar"/>
@@ -109,7 +154,7 @@
                         <span asp-validation-for="Player.Nickname"></span>
                     </div>
                 </div>
-                <div class="col-sm-5">
+                <div class="col-5">
                     <b>@Html.DisplayNameFor(model => model.Player.ProfilePicture)</b>
                     <img/>
                 </div>
@@ -136,10 +181,10 @@
             <input type="hidden" asp-for="Player.Users"/>
             <div asp-validation-summary="ModelOnly"></div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-6">
                     <button asp-page-handler="UserDetails" id="user-details-confirm" type="submit" class="btn bg-orangered text-center">Confirm</button>
                 </div>
-                <div class="col-sm-6 text-right">
+                <div class="col-6 text-right">
                     <input asp-for="ProfilePicture.PictureFile" type="file" id="file-chooser" title="Select your profile picture"/>
                     <button id="upload-picture-button" type="button" class="btn bg-orangered text-center">Upload picture</button>
                     <div class="profile-picture-result">@Model.Result</div>

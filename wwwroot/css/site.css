@@ -315,6 +315,28 @@ body {
 
 #content .add-button:focus { color: crimson; }
 
+#content .form-header {
+    width: 100%;
+    height: fit-content;
+    padding: 0;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    vertical-align: middle;
+    color: rgba(66, 66, 66, 1);
+    background-color: orangered;
+    border-radius: 0.7rem;
+}
+
+#content .form {
+    display: none;
+    position: fixed;
+    border: solid orangered 0.2rem;
+    border-radius: 1rem;
+    background-color: rgba(66, 66, 66, 1);
+    z-index: 1000;
+}
+
 #content #user-menu {
     display: none;
     position: fixed;
@@ -367,13 +389,49 @@ body {
     position: fixed;
     top: 10%;
     left: 10%;
-    width: 50%;
-    height: fit-content;
-    padding: 0 1.5rem;
+    width: 60%;
     border: solid orangered 0.2rem;
     border-radius: 1rem;
     background-color: rgba(66, 66, 66, 1);
     z-index: 1000;
+}
+
+#content #add-event-form .add-event-header {
+    width: 100%;
+    height: fit-content;
+    padding: 0;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    vertical-align: middle;
+    color: rgba(66, 66, 66, 1);
+    background-color: orangered;
+    border-radius: 0.7rem;
+}
+
+#content #add-event-form label {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#content #add-event-form .place-search {
+    font-size: 1.5rem;
+    color: orangered;
+    background: transparent;
+    border: solid orangered 0.2rem;
+    border-radius: 1rem;
+}
+
+#content #select-place-form {
+    display: none;
+    position: fixed;
+    border: solid orangered 0.2rem;
+    border-radius: 1rem;
+    background-color: rgba(66, 66, 66, 1);
+    z-index: 1000;
+}
+
+#content #add-place-form {
 }
 
 #content #user-details-form {
@@ -382,7 +440,6 @@ body {
     top: 10%;
     left: 10%;
     width: 50%;
-    height: 85%;
     padding: 0;
     border: solid orangered 0.2rem;
     border-radius: 1rem;
@@ -403,7 +460,10 @@ body {
     border-radius: 0.7rem;
 }
 
-#content #user-details-form label { font-weight: bold; }
+#content #user-details-form label {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
 
 #content #user-details-form #file-chooser { display: none; }
 
