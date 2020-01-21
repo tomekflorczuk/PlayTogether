@@ -10,7 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Debug'
+  buildConfiguration: 'Realease'
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
