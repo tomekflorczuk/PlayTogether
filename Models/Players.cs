@@ -23,7 +23,6 @@ namespace PlayTogether.Models
         public int PointsOfTrust { get; set; }
         public int GamesAttended { get; set; }
         public DateTime Modified { get; set; }
-
         public virtual ICollection<Users> Users { get; set; }
     }
 }

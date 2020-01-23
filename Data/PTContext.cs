@@ -29,21 +29,41 @@ namespace PlayTogether.Data
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<SportTypes> SportTypes { get; set; }
         public virtual DbSet<Surfaces> Surfaces { get; set; }
-        public virtual DbSet<UpcomingGame> UpcomingGames { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<UsersLog> UsersLog { get; set; }
+        public virtual DbSet<UpcomingGame> UpcomingGames { get; set; }
+        public virtual DbSet<Cities> ListCities { get; set; }
+        public virtual DbSet<Surfaces> ListSurfaces { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=35.228.101.173;database=PlayTogether;uid=root;pwd=Hanusia22", x => x.ServerVersion("5.7.14-mysql"));
+                optionsBuilder.UseMySql("server=35.228.101.173;database=PlayTogether;uid=root;pwd=Hanusia22",
+                    x => x.ServerVersion("5.7.14-mysql"));
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Cities>(entity =>
+            {
+                entity.HasKey(e => e.CityId)
+                    .HasName("PRIMARY");
+
+                entity.Property(e => e.CityId)
+                    .HasColumnName("city_id")
+                    .HasColumnType("int(11)")
+                    .HasComment("Klucz główny");
+
+                entity.Property(e => e.CityName)
+                    .HasColumnName("city_name")
+                    .HasColumnType("varchar(15)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+            });
+            
             modelBuilder.Entity<Games>(entity =>
             {
                 entity.HasKey(e => e.GameId)
@@ -787,6 +807,10 @@ namespace PlayTogether.Data
                 entity.Property(v => v.Notes).HasColumnName("notes");
             });
 
+            modelBuilder.Entity<Cities>(entity => { entity.ToView("ListCities"); });
+
+            modelBuilder.Entity<Surfaces>(entity => { entity.ToView("ListSurfaces"); });
+
             modelBuilder.Entity<Games>(entity =>
             {
                 entity.ToView("UpcomingFootballActiveGames");
@@ -808,13 +832,14 @@ namespace PlayTogether.Data
 
         public async Task<List<Logging>> LoggingMethodAsync(string plogin, string ppassword, string pmail)
         {
-            List<Logging> list = new List<Logging>();
+            var list = new List<Logging>();
 
             try
             {
-                list = await Set<Logging>().FromSqlRaw("CALL Logging (@p0, @p1, @p2)", parameters: new[] {plogin, ppassword, pmail}).ToListAsync();
+                list = await Set<Logging>().FromSqlRaw("CALL Logging (@p0, @p1, @p2)", new[] {plogin, ppassword, pmail})
+                    .ToListAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

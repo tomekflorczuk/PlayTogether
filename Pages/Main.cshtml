@@ -28,7 +28,7 @@
         <div class="row"></div>
         @foreach (var game in Model.UpcomingGames)
         {
-            <div class="game-component col-sm-4">
+            <div class="game-component col-4">
 
             </div>
         }
@@ -36,8 +36,8 @@
 </div>
 <div id="add-event-form">
     <div class="add-event-header row">
-        <div class="col-sm-10 text-center mt-2 pt-1">Add Event</div>
-        <button id="add-event-close-button" type="button" class="close-button col-sm-2">
+        <div class="col-10 text-center mt-2 pt-1">Add Event</div>
+        <button id="add-event-close-button" type="button" class="col-2 close-button">
             <i class="fas fa-times-circle"></i>
         </button>
     </div>
@@ -75,7 +75,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Game.Place"></label><br/>
-                        <button type="button" class="place-search">
+                        <button id="place-search" type="button" class="place-search">
                             <i class="fas fa-ellipsis-h"></i>
                         </button>
                     </div>
@@ -88,40 +88,55 @@
         </form>
     </div>
 </div>
-<div id="select-place-form">
-    <div id="select-place">
-        <div id="add-place">
-            <button type="button">
-
-            </button>
+<div id="select-place-form" class="form">
+    <div class="form-header row">
+        <div class="col-10 text-center mt-2 pt-1">Select pitch</div>
+        <button id="select-place-close-button" type="button" class="col-2 close-button">
+            <i class="fas fa-times-circle"></i>
+        </button>
+    </div>
+    <div class="p-2">
+        <div class="row">
+            <div class="col-6">
+                <button type="button" class="btn bg-orangered">
+                    Select
+                </button>
+            </div>
+            <div class="col-6 text-right">
+                <button id="add-place-button" type="button" class="btn bg-orangered">
+                    Add place
+                </button>
+            </div>
         </div>
     </div>
 </div>
 <div id="add-place-form" class="form">
-    <div class="form-header">
+    <div class="form-header row">
         <div class="col-10 text-center mt-2 pt-1">Add new pitch</div>
-        <button id="add-place-close-button" type="button" class="col-2 close-button"></button>
+        <button id="add-place-close-button" type="button" class="col-2 close-button">
+            <i class="fas fa-times-circle"></i>
+        </button>
     </div>
     <div class="p-2">
         <form method="post">
             @Html.AntiForgeryToken()
             <div class="form-group">
-                <label asp-for="Places.City"></label>
-                <select asp-for="Places.City" asp-items="ViewBag.City"></select>
-                <span asp-validation-for="Places.City"></span>
+                <label asp-for="NewPlace.City"></label>
+
+                <span asp-validation-for="NewPlace.City"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Places.PlaceName"></label>
-                <input asp-for="Places.PlaceName"/>
-                <span asp-validation-for="Places.PlaceName"></span>
+                <label asp-for="NewPlace.PlaceName"></label>
+                <input asp-for="NewPlace.PlaceName"/>
+                <span asp-validation-for="NewPlace.PlaceName"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Places.Surface"></label>
-                <select asp-for="Places.Surface" asp-items="ViewBag.Surface"></select>
-                <span asp-validation-for="Places.Surface"></span>
+                <label asp-for="NewPlace.Surface"></label>
+
+                <span asp-validation-for="NewPlace.Surface"></span>
             </div>
             <div>
-                <button id="add-place-button" type="submit" class="btn bg-orangered">Add place</button>
+                <button id="" type="submit" class="btn bg-orangered">Add place</button>
             </div>
         </form>
     </div>
@@ -156,12 +171,12 @@
                     </div>
                 </div>
                 <div class="col-5">
-                    <b>@Html.DisplayNameFor(model => model.Player.ProfilePicture)</b>
-                    <img/>
+                    <label>@Html.DisplayNameFor(model => model.Player.ProfilePicture)</label>
+                    <img src=""/>
                 </div>
             </div>
             <div>
-                <b>@Html.DisplayNameFor(model => model.Player.BirthDate):</b>
+                <label>@Html.DisplayNameFor(model => model.Player.BirthDate):</label>
                 @Html.DisplayFor(model => model.Player.BirthDate)
                 <input type="hidden" asp-for="Player.BirthDate"/>
             </div>
@@ -171,11 +186,11 @@
                 <span asp-validation-for="Player.Bio"></span>
             </div>
             <div>
-                <b>@Html.DisplayNameFor(model => model.Player.PointsOfTrust):</b>
+                <label>@Html.DisplayNameFor(model => model.Player.PointsOfTrust):</label>
                 @Html.DisplayFor(model => model.Player.PointsOfTrust)
             </div>
             <div>
-                <b>@Html.DisplayNameFor(model => model.Player.GamesAttended):</b>
+                <label>@Html.DisplayNameFor(model => model.Player.GamesAttended):</label>
                 @Html.DisplayFor(model => model.Player.GamesAttended)
             </div>
             <input type="hidden" asp-for="Player.Modified"/>

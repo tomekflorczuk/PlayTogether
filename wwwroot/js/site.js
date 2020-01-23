@@ -3,7 +3,26 @@
 
 // Write your Javascript code.
 
-$(document).ready(function() {
+
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    $("#current-time").html(h + ":" + m + ":" + s);
+    var t = setTimeout(startTime, 500);
+}
+
+function checkTime(i) {
+    if (i < 10) { i = "0" + i };
+    return i;
+}
+
+$(document).ready(function () {
+    var currtime = new Date();
+
     //Zmiana koloru oraz id wybranego sportu
     $("#football-button").click(function(e) {
         $("#football-button").css("background-color", "crimson");
@@ -68,6 +87,14 @@ $(document).ready(function() {
             type: "post"
         });
     });
+    //Przełączanie górnego panelu
+    $("#top-panel-toogle").click(function() {
+        $("#top-panel").toggle();
+    });
+    //Wyświetlanie aktualnej daty i godziny
+
+    //$("#current-time").html(currtime.toLocaleString());
+
     //Wyświetlenie menu usera
     $("#user-button").click(function() {
         $("#user-menu").show();
@@ -91,13 +118,33 @@ $(document).ready(function() {
     //Zatwierdzenie szczegółów usera
 
     //Wyświetlanie menu wyboru pliku obrazu
-    $("#upload-picture-button").click(function (e) {
+    $("#upload-picture-button").click(function(e) {
         $("#file-chooser").click();
     });
     //Wyświetlanie menu dodawania wydarzenia
     $("#add-event-button").click(function() {
         $("#user-details-form").hide();
         $("#add-event-form").show();
+    });
+    //Wyświetlanie menu wyboru miejsca
+    $("#place-search").click(function() {
+        $("#select-place-form").show();
+        $("#add-event-form").hide();
+    });
+    //Zamykanie menu wyboru miejsca
+    $("#select-place-close-button").click(function() {
+        $("#select-place-form").hide();
+        $("#add-event-form").show();
+    });
+    //Wyświetlanie menu dodawania miejsca
+    $("#add-place-button").click(function() {
+        $("#add-place-form").show();
+        $("#select-place-form").hide();
+    });
+    //Zamykanie menu dodawania miejsca
+    $("#add-place-close-button").click(function() {
+        $("#select-place-form").show();
+        $("#add-place-form").hide();
     });
     //Zamykanie menu dodawania wydarzenia
     $("#add-event-close-button").click(function() {

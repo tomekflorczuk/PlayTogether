@@ -189,6 +189,8 @@ body {
     font-size: 2rem;
     font-weight: 400;
     padding: 20px;
+    background: transparent;
+    border: 0;
 }
 
 #sidebar .sport-list-menu .sport-button {
@@ -206,7 +208,8 @@ body {
 
 #sidebar .sidebar-header:hover {
     background-color: coral;
-    font-size: 3.5rem;
+    border: solid 0.2rem darkred;
+    border-radius: 1rem;
 }
 
 #sidebar .sport-button:hover {
@@ -237,7 +240,7 @@ body {
     color: orangered;
 }
 
-#content .top-panel {
+#content #top-panel {
     width: 100%;
     padding: 0;
 }
@@ -269,6 +272,15 @@ body {
 }
 
 #content .search-button:hover { font-size: 1.1rem; }
+
+#content #city-select {
+    margin-left: 3rem;
+}
+
+#content .current-time {
+    margin-left: 5rem;
+    font-size: 1.8rem;
+}
 
 #content .user {
     position: fixed;
@@ -337,6 +349,14 @@ body {
     z-index: 1000;
 }
 
+#content .close-button {
+    font-size: 2rem;
+    text-align: right;
+    color: rgba(66, 66, 66, 1);
+    background: transparent;
+    border: 0;
+}
+
 #content #user-menu {
     display: none;
     position: fixed;
@@ -376,14 +396,6 @@ body {
     border-radius: 0.5rem;
 }
 
-#content .close-button {
-    font-size: 2rem;
-    text-align: right;
-    color: rgba(66, 66, 66, 1);
-    background: transparent;
-    border: 0;
-}
-
 #content #add-event-form {
     display: none;
     position: fixed;
@@ -393,7 +405,7 @@ body {
     border: solid orangered 0.2rem;
     border-radius: 1rem;
     background-color: rgba(66, 66, 66, 1);
-    z-index: 1000;
+    z-index: 950;
 }
 
 #content #add-event-form .add-event-header {
@@ -423,15 +435,17 @@ body {
 }
 
 #content #select-place-form {
-    display: none;
     position: fixed;
-    border: solid orangered 0.2rem;
-    border-radius: 1rem;
-    background-color: rgba(66, 66, 66, 1);
-    z-index: 1000;
+    top: 10%;
+    left: 10%;
+    width: 40%;
 }
 
 #content #add-place-form {
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    width: 25%;
 }
 
 #content #user-details-form {

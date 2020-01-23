@@ -13,6 +13,7 @@ using PlayTogether.Models;
 using Microsoft.EntityFrameworkCore;
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PlayTogether.Pages
 {
@@ -29,17 +30,27 @@ namespace PlayTogether.Pages
         [BindProperty] public ProfilePicture ProfilePicture { get; set; }
         public string Result { get; set; }
         [BindProperty] public List<UpcomingGame> UpcomingGames { get; set; }
+        [BindProperty] public List<Cities> Cities { get; set; }
+        [BindProperty] public List<Surfaces> Surfaces { get; set; }
+        [BindProperty] public List<Places> Places { get; set; }
         [BindProperty] public Games Game { get; set; }
         [BindProperty] public Players Player { get; set; }
-        [BindProperty] public Places Places { get; set; }
-        [BindProperty] public Cities Cities { get; set; }
+        [BindProperty] public Places NewPlace { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int loggedid)
         {
             Loggedid = loggedid;
-            Player = _context.Players.Single(p => p.PlayerId == loggedid);
+            //Player = _context.Players.Single(p => p.PlayerId == loggedid);
+            Player = await _context.Players.Include(u => u.Users).FirstOrDefaultAsync(m => m.PlayerId == loggedid);
 
-            UpcomingGames = await _context.UpcomingGames.ToListAsync(); 
+            UpcomingGames = await _context.UpcomingGames.ToListAsync();
+            Cities = await _context.ListCities.ToListAsync();
+            Surfaces = await _context.ListSurfaces.ToListAsync();
+
+            //SelectList selectCities = new SelectList(Cities);
+            ViewData["SelectCities"] = new SelectList(Cities, "CityName", "CityName");
+            //ViewData["Cities"] = new SelectList(_context.Set<Cities>(), "CityName", "Cities");
+            //ViewData["Surfaces"] = new SelectList(_context.Set<Surfaces>(), "SurfaceName", "Surface");
 
             return Page();
         }
