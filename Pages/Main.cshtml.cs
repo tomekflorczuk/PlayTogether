@@ -47,10 +47,9 @@ namespace PlayTogether.Pages
             Cities = await _context.ListCities.ToListAsync();
             Surfaces = await _context.ListSurfaces.ToListAsync();
 
-            //SelectList selectCities = new SelectList(Cities);
-            ViewData["SelectCities"] = new SelectList(Cities, "CityName", "CityName");
-            //ViewData["Cities"] = new SelectList(_context.Set<Cities>(), "CityName", "Cities");
-            //ViewData["Surfaces"] = new SelectList(_context.Set<Surfaces>(), "SurfaceName", "Surface");
+            ViewData["SelectCitiesTop"] = new SelectList(Cities, "CityName", "CityName");
+            ViewData["SelectCities"] = new SelectList(Cities, "CityId", "CityName");
+            ViewData["SelectSurfaces"] = new SelectList(Surfaces, "SurfaceId", "SurfaceName");
 
             return Page();
         }

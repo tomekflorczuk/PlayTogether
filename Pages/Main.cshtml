@@ -121,18 +121,18 @@
         <form method="post">
             @Html.AntiForgeryToken()
             <div class="form-group">
-                <label asp-for="NewPlace.City"></label>
-
-                <span asp-validation-for="NewPlace.City"></span>
+                <label asp-for="NewPlace.CityId"></label>
+                <select asp-for="NewPlace.CityId" class="form-control" asp-items="ViewBag.SelectCities"></select>
+                <span asp-validation-for="NewPlace.CityId"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NewPlace.PlaceName"></label>
-                <input asp-for="NewPlace.PlaceName"/>
+                <input class="form-control" asp-for="NewPlace.PlaceName"/>
                 <span asp-validation-for="NewPlace.PlaceName"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NewPlace.Surface"></label>
-
+                <select class="form-control" asp-items="ViewBag.SelectSurfaces"></select>
                 <span asp-validation-for="NewPlace.Surface"></span>
             </div>
             <div>
