@@ -10,13 +10,13 @@ namespace PlayTogether.Models
     {
         [Key]
         public int ParticipantId { get; set; }
-        public int UserId { get; set; }
+        public int PlayerId { get; set; }
         public int GameId { get; set; }
         public string ParticipantStatus { get; set; }
         public DateTime Added { get; set; }
         public DateTime Modified { get; set; }
 
         public virtual Games Game { get; set; }
-        public virtual Users User { get; set; }
+        public virtual Players Player { get; set; }
     }
 }

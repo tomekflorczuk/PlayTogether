@@ -16,11 +16,13 @@ function startTime() {
 }
 
 function checkTime(i) {
-    if (i < 10) { i = "0" + i };
+    if (i < 10) {
+        i = "0" + i;
+    };
     return i;
 }
 
-$(document).ready(function () {
+$(document).ready(function() {
     var currtime = new Date();
 
     //Zmiana koloru oraz id wybranego sportu
@@ -91,10 +93,6 @@ $(document).ready(function () {
     $("#top-panel-toogle").click(function() {
         $("#top-panel").toggle();
     });
-    //Wyświetlanie aktualnej daty i godziny
-
-    //$("#current-time").html(currtime.toLocaleString());
-
     //Wyświetlenie menu usera
     $("#user-button").click(function() {
         $("#user-menu").show();
@@ -116,7 +114,25 @@ $(document).ready(function () {
         $("#user-details-form").hide();
     });
     //Zatwierdzenie szczegółów usera
+    $("#confirm-add-place-button").click(function(e) {
+        /*
+e.preventDefault();
+var t = $("input[name='__RequestVerificationToken']").val();
 
+$.ajax({
+    url: $(this).attr("formaction"),
+    headers:
+    {
+        "RequestVerificationToken":
+            t
+    },
+    type: "post"
+});
+*/
+        $("#add-place-form").hide();
+        $("#select-place-form").show();
+
+    });
     //Wyświetlanie menu wyboru pliku obrazu
     $("#upload-picture-button").click(function(e) {
         $("#file-chooser").click();

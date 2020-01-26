@@ -10,6 +10,8 @@ namespace PlayTogether.Models
         public Players()
         {
             Users = new HashSet<Users>();
+            Games = new HashSet<Games>();
+            Participants = new HashSet<Participants>();
         }
 
         [Key]
@@ -24,5 +26,7 @@ namespace PlayTogether.Models
         public int GamesAttended { get; set; }
         public DateTime Modified { get; set; }
         public virtual ICollection<Users> Users { get; set; }
+        public virtual ICollection<Games> Games { get; set; }
+        public virtual ICollection<Participants> Participants { get; set; }
     }
 }

@@ -14,16 +14,19 @@ using PlayTogether.Models;
 using System.Web;
 using System.Web.Helpers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using PlayTogether.Data;
 
 namespace PlayTogether.Pages
 {
     public class LoggingModel : PageModel
     {
-        private readonly Data.PtContext _context;
+        private readonly PtContext _context;
+        private readonly AppData _session;
 
-        public LoggingModel(Data.PtContext context)
+        public LoggingModel(PtContext context, AppData session)
         {
             _context = context;
+            _session = session;
         }
 
         [BindProperty] public Models.Users Users { get; set; }
@@ -59,8 +62,8 @@ namespace PlayTogether.Pages
                     {
                         var logindetails = logininfo.First();
                         await SignInUser(logindetails.Login, false);
-                        //_context.LoggedUserId = logindetails.User_Id;
-                        return RedirectToPage("/Main", new {loggedid = logindetails.User_Id});
+                        _session.LoggedId = logindetails.User_Id;
+                        return RedirectToPage("/Main");
                     }
                     ModelState.AddModelError(string.Empty, "Invalid login or password");
                 }
@@ -122,8 +125,8 @@ namespace PlayTogether.Pages
                     _context.Users.Add(Users);
                     await _context.SaveChangesAsync();
                     await SignInUser(Users.Login, false);
-                    //_context.LoggedUserId = Users.UserId;
-                    return RedirectToPage("/Main", new {loggedid = Users.UserId});
+                    _session.LoggedId = Users.UserId;
+                    return RedirectToPage("/Main");
                 }
             }
             catch (Exception ex)

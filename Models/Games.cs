@@ -30,7 +30,7 @@ namespace PlayTogether.Models
         [ForeignKey("GameType")]
         public virtual SportTypes GameTypeNavigation { get; set; }
         [ForeignKey("HostUser")]
-        public virtual Users HostUserNavigation { get; set; }
+        public virtual Players HostUserNavigation { get; set; }
         [ForeignKey("PlaceId")]
         public virtual Places Place { get; set; }
         public virtual ICollection<Participants> Participants { get; set; }

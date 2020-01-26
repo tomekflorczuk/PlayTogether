@@ -14,12 +14,14 @@ namespace PlayTogether.Models
         [Required(ErrorMessage = "Login is required")]
         [DataType(DataType.Text)]
         [Display(Name = "Username")]
+        [MinLength(1)]
         [MaxLength(20, ErrorMessage = "Your login is too long, it should be maximum 20 characters long")]
         public string Login { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         [Display(Name= "Password")]
+        [MinLength(1)]
         [MaxLength(256, ErrorMessage = "Your password is too long, it should be maximum 25 characters long ")]
         public string Password { get; set; }
         
@@ -27,6 +29,7 @@ namespace PlayTogether.Models
         [DataType(DataType.EmailAddress)]
         [EmailAddress]
         [Display(Name = "E-mail address")]
+        [MinLength(1)]
         [MaxLength(30, ErrorMessage = "Your e-mail is too long, it should be maximum 30 characters long")]
         public string Email { get; set; }
 
@@ -39,12 +42,14 @@ namespace PlayTogether.Models
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "First Name")]
+        [MinLength(1)]
         [MaxLength(15)]
         public string FirstName { get; set; }
 
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Last Name")]
+        [MinLength(1)]
         [MaxLength(25)]
         public string LastName { get; set; }
 
@@ -106,6 +111,8 @@ namespace PlayTogether.Models
     {
         [DataType(DataType.Text)]
         [Display(Name = "Place name")]
+        [MinLength(5)]
+        [MaxLength(25)]
         public string PlaceName { get; set; }
 
         [Display(Name = "City")]

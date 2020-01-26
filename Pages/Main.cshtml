@@ -5,6 +5,7 @@
 @{
     ViewData["Title"] = "Your wall";
 }
+
 <div id="user-menu">
     <ul>
         <li class="username">@User.Identity.Name</li>
@@ -47,34 +48,34 @@
             <div class="row">
                 <div class="col-7">
                     <div class="form-group">
-                        <label asp-for="Game.GameDate"></label>
-                        <input asp-for="Game.GameDate" class="form-control bar"/>
-                        <span asp-validation-for="Game.GameDate"></span>
+                        <label asp-for="NewGame.GameDate"></label>
+                        <input asp-for="NewGame.GameDate" class="form-control bar"/>
+                        <span asp-validation-for="NewGame.GameDate"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Game.GameLength"></label>
-                        <input asp-for="Game.GameLength" class="form-control bar"/>
-                        <span asp-validation-for="Game.GameLength"></span>
+                        <label asp-for="NewGame.GameLength"></label>
+                        <input asp-for="NewGame.GameLength" class="form-control bar"/>
+                        <span asp-validation-for="NewGame.GameLength"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Game.Notes"></label>
-                        <textarea rows="6" asp-for="Game.Notes" class="form-control bar"></textarea>
-                        <span asp-validation-for="Game.Notes"></span>
+                        <label asp-for="NewGame.Notes"></label>
+                        <textarea rows="6" asp-for="NewGame.Notes" class="form-control bar"></textarea>
+                        <span asp-validation-for="NewGame.Notes"></span>
                     </div>
                 </div>
                 <div class="col-5">
                     <div class="form-group">
-                        <label asp-for="Game.MaxPlayers"></label>
-                        <input asp-for="Game.MaxPlayers" class="form-control bar"/>
-                        <span asp-validation-for="Game.MaxPlayers"></span>
+                        <label asp-for="NewGame.MaxPlayers"></label>
+                        <input asp-for="NewGame.MaxPlayers" class="form-control bar"/>
+                        <span asp-validation-for="NewGame.MaxPlayers"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Game.Price"></label>
-                        <input asp-for="Game.Price" class="form-control bar w-75 m-0" placeholder="PLN"/>
-                        <span asp-validation-for="Game.Price"></span>
+                        <label asp-for="NewGame.Price"></label>
+                        <input asp-for="NewGame.Price" class="form-control bar w-75 m-0" placeholder="PLN"/>
+                        <span asp-validation-for="NewGame.Price"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Game.Place"></label><br/>
+                        <label asp-for="NewGame.Place"></label><br/>
                         <button id="place-search" type="button" class="place-search">
                             <i class="fas fa-ellipsis-h"></i>
                         </button>
@@ -96,6 +97,8 @@
         </button>
     </div>
     <div class="p-2">
+        <div>
+        </div>
         <div class="row">
             <div class="col-6">
                 <button type="button" class="btn bg-orangered">
@@ -131,12 +134,12 @@
                 <span asp-validation-for="NewPlace.PlaceName"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NewPlace.Surface"></label>
-                <select class="form-control" asp-items="ViewBag.SelectSurfaces"></select>
-                <span asp-validation-for="NewPlace.Surface"></span>
+                <label asp-for="NewPlace.SurfaceId"></label>
+                <select asp-for="NewPlace.SurfaceId" class="form-control" asp-items="ViewBag.SelectSurfaces"></select>
+                <span asp-validation-for="NewPlace.SurfaceId"></span>
             </div>
             <div>
-                <button id="" type="submit" class="btn bg-orangered">Add place</button>
+                <button asp-page-handler="AddPlace" id="confirm-add-place-button" type="submit" class="btn bg-orangered">Add place</button>
             </div>
         </form>
     </div>
@@ -169,16 +172,18 @@
                         <input asp-for="Player.Nickname" class="form-control bar"/>
                         <span asp-validation-for="Player.Nickname"></span>
                     </div>
+                    <div>
+                        <label>@Html.DisplayNameFor(model => model.Player.BirthDate):</label>
+                        @Html.DisplayFor(model => model.Player.BirthDate)
+                        <input type="hidden" asp-for="Player.BirthDate"/>
+                    </div>
                 </div>
                 <div class="col-5">
                     <label>@Html.DisplayNameFor(model => model.Player.ProfilePicture)</label>
-                    <img src=""/>
+                    <div class="profile-picture">
+                        <img src="@Html.DisplayFor(model => model.Player.ProfilePicture)" alt="profile picture"/>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <label>@Html.DisplayNameFor(model => model.Player.BirthDate):</label>
-                @Html.DisplayFor(model => model.Player.BirthDate)
-                <input type="hidden" asp-for="Player.BirthDate"/>
             </div>
             <div class="form-group">
                 <label asp-for="Player.Bio"></label>
@@ -203,7 +208,7 @@
                 <div class="col-6 text-right">
                     <input asp-for="ProfilePicture.PictureFile" type="file" id="file-chooser" title="Select your profile picture"/>
                     <button id="upload-picture-button" type="button" class="btn bg-orangered text-center">Upload picture</button>
-                    <div class="profile-picture-result">@Model.Result</div>
+                    <div class="profile-picture-result"></div>
                 </div>
             </div>
         </form>

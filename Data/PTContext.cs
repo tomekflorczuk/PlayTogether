@@ -73,7 +73,7 @@ namespace PlayTogether.Data
                     .HasName("fk_games_types");
 
                 entity.HasIndex(e => e.HostUser)
-                    .HasName("fk_games_users");
+                    .HasName("fk_games_players");
 
                 entity.HasIndex(e => e.PlaceId)
                     .HasName("fk_games_places");
@@ -157,7 +157,7 @@ namespace PlayTogether.Data
                     .WithMany(p => p.Games)
                     .HasForeignKey(d => d.HostUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_games_users");
+                    .HasConstraintName("fk_games_players");
 
                 entity.HasOne(d => d.Place)
                     .WithMany(p => p.Games)
@@ -294,8 +294,8 @@ namespace PlayTogether.Data
                 entity.HasIndex(e => e.GameId)
                     .HasName("fk_participant_game");
 
-                entity.HasIndex(e => e.UserId)
-                    .HasName("fk_partcipant_user");
+                entity.HasIndex(e => e.PlayerId)
+                    .HasName("fk_partcipant_player");
 
                 entity.Property(e => e.ParticipantId)
                     .HasColumnName("participant_id")
@@ -329,7 +329,7 @@ namespace PlayTogether.Data
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.UserId)
+                entity.Property(e => e.PlayerId)
                     .HasColumnName("user_id")
                     .HasColumnType("int(11)")
                     .HasComment("Klucz obcy - Zawodnik");
@@ -340,9 +340,9 @@ namespace PlayTogether.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_participant_game");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Player)
                     .WithMany(p => p.Participants)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.PlayerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_partcipant_user");
             });
@@ -439,6 +439,11 @@ namespace PlayTogether.Data
                     .HasComment("Nazwa/adres boiska")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.CityId)
+                    .HasColumnName("city_id")
+                    .HasColumnType("tinyint(4)")
+                    .HasComment("Klucz obcy - miasto wydarzenia");
 
                 entity.Property(e => e.SurfaceId)
                     .HasColumnName("surface_id")

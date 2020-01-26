@@ -11,8 +11,6 @@ namespace PlayTogether.Models
     {
         public Users()
         {
-            Games = new HashSet<Games>();
-            Participants = new HashSet<Participants>();
         }
 
         [Key]
@@ -31,7 +29,5 @@ namespace PlayTogether.Models
         public virtual Players Player { get; set; }
         [ForeignKey("RoleId")] 
         public virtual Roles Role { get; set; }
-        public virtual ICollection<Games> Games { get; set; }
-        public virtual ICollection<Participants> Participants { get; set; }
     }
 }

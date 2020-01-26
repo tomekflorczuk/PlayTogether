@@ -273,9 +273,7 @@ body {
 
 #content .search-button:hover { font-size: 1.1rem; }
 
-#content #city-select {
-    margin-left: 3rem;
-}
+#content #city-select { margin-left: 3rem; }
 
 #content .current-time {
     margin-left: 5rem;
@@ -349,9 +347,7 @@ body {
     z-index: 1000;
 }
 
-#content .form label {
-    font-weight: bold;
-}
+#content .form label { font-weight: bold; }
 
 #content .close-button {
     font-size: 2rem;
@@ -481,6 +477,21 @@ body {
 #content #user-details-form label {
     font-size: 1.2rem;
     font-weight: bold;
+}
+
+#content #user-details-form .profile-picture {
+    height: 17rem;
+}
+
+#content #user-details-form img {
+    /*
+    height: 17rem;
+    width: 17rem;
+        */
+    max-width: 100%;
+    max-height: 100%;
+    border: solid orangered 0.1rem;
+    border-radius: 0.5rem;
 }
 
 #content #user-details-form #file-chooser { display: none; }
