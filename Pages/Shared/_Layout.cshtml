@@ -26,7 +26,7 @@
                 </button>
             </li>
             <li>
-                <button asp-page-handler="BaksetballButton" type="button" id="basketball-button" class="sport-button">
+                <button asp-page-handler="BasketballButton" type="button" id="basketball-button" class="sport-button">
                     <i class="fas fa-basketball-ball"></i>
                 </button>
             </li>
@@ -45,7 +45,7 @@
         <header id="top-panel">
             <nav class="navbar navbar-expand-md">
                 <div>
-                    <a class="navbar-brand nav-link title-button" asp-area="" asp-page="/Index">PlayTogether</a>
+                    <a class="navbar-brand nav-link title-button" asp-page="/Index">PlayTogether</a>
                 </div>
                 <form action="">
                     <div class="pl-2 searchbar rounded rounded-pill input-group bg-orangered">
@@ -57,13 +57,13 @@
                         </div>
                     </div>
                 </form>
-                <div id="reload" class="reload">
-                    <button type="button" class="reload-button">
+                <div class="reload">
+                    <button id="reload-button" type="button" class="reload-button">
                         <i class="fas fa-redo-alt"></i>
                     </button>
                 </div>
                 <div id="city-select">
-                    <select class="form-control" asp-items="ViewBag.SelectCitiesTop"></select>
+                    <select id="top-city-select" class="form-control" asp-items="ViewBag.SelectCitiesTop"></select>
                 </div>
                 <div id="current-time" class="current-time"></div>
                 <div id="user" class="user">

@@ -14,7 +14,7 @@ namespace PlayTogether.Models
         }
 
         [Key]
-        public sbyte CityId { get; set; }
+        public int CityId { get; set; }
         public string CityName { get; set; }
         public virtual ICollection<Places> Places { get; set; }
     }

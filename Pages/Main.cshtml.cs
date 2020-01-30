@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -15,6 +17,7 @@ using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Options;
 using PlayTogether.Data;
 
@@ -23,10 +26,11 @@ namespace PlayTogether.Pages
     [Authorize]
     public class MainModel : PageModel
     {
-        private readonly PtContext _context;
-        private readonly AppData _session;
+        public readonly PtContext _context;
+        public readonly AppData _session;
         private readonly CloudStorage _bucket;
         private readonly StorageClient _storage;
+
         //Constructor
         public MainModel(PtContext context, AppData session, IOptions<CloudStorage> bucket)
         {
@@ -35,55 +39,79 @@ namespace PlayTogether.Pages
             _bucket = bucket.Value;
             _storage = StorageClient.Create();
         }
+
         //Properties
-        [BindProperty] public ProfilePicture ProfilePicture { get; set; }
+        [BindProperty] public Players Player { get; set; }
         [BindProperty] public List<UpcomingGame> UpcomingGames { get; set; }
         [BindProperty] public List<Cities> Cities { get; set; }
         [BindProperty] public List<Surfaces> Surfaces { get; set; }
         [BindProperty] public List<Places> Places { get; set; }
         [BindProperty] public Games NewGame { get; set; }
-        [BindProperty] public Players Player { get; set; }
         [BindProperty] public Places NewPlace { get; set; }
-        
+        [BindProperty] public Places SelectedPlace { get; set; }
+
+        //On page load
         public async Task<IActionResult> OnGetAsync()
         {
-            Player = await _context.Players.Include(u => u.Users).FirstOrDefaultAsync(m => m.PlayerId == _session.LoggedId);
-            UpcomingGames = await _context.UpcomingGames.ToListAsync();
+            Player = await _context.Players.Include(u => u.Users)
+                .FirstOrDefaultAsync(m => m.PlayerId == _session.LoggedId);
             Cities = await _context.ListCities.ToListAsync();
             Surfaces = await _context.ListSurfaces.ToListAsync();
-            //Places = await _context.Set<Places>().FromSqlRaw("Call ListPlaces(@p0)", new[] { }).ToListAsync();
-            /*
-            try
-            {
-                var uploadedpicture = await _storage.GetObjectAsync(_bucket.BucketName, Player.PlayerId.ToString());
-                ProfilePicture.PictureUrl = uploadedpicture.MediaLink;
-            }
-            catch
-            {
-                ProfilePicture.PictureUrl = null;
-            }
-            */
-            ViewData["SelectCitiesTop"] = new SelectList(Cities, "CityName", "CityName");
+            UpcomingGames = await _context.Set<UpcomingGame>()
+                .FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity)
+                .ToListAsync();
+            Places = await _context.Set<Places>().FromSqlRaw("CALL ListPlaces(@p0)", _session.SelectedCity)
+                .ToListAsync();
+
+            ViewData["SelectPlace"] = new SelectList(Places, "PlaceId", "PlaceName");
+            ViewData["SelectCitiesTop"] = new SelectList(Cities, "CityId", "CityName");
             ViewData["SelectCities"] = new SelectList(Cities, "CityId", "CityName");
             ViewData["SelectSurfaces"] = new SelectList(Surfaces, "SurfaceId", "SurfaceName");
 
             return Page();
         }
+
+        //On city changed
+        public async Task<JsonResult> OnPostCityChanged(int cityid)
+        {
+            _session.SelectedCity = cityid;
+            //UpcomingGames = await _context.Set<UpcomingGame>().FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity).ToListAsync();
+            //Places = await _context.Set<Places>().FromSqlRaw("CALL ListPlaces(@p0)", _session.SelectedCity).ToListAsync();
+
+            //return new JsonResult(Places);
+            return new JsonResult("City changed");
+        }
+
         //Clicking FootballButton
-        public void OnPostFootballButton()
+        public async Task<JsonResult> OnPostFootballButton()
         {
             _session.SelectedSportType = 1;
+            UpcomingGames = await _context.Set<UpcomingGame>()
+                .FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity)
+                .ToListAsync();
+            return new JsonResult("Chosen football");
         }
+
         //Clicking BasketballButton
-        public void OnPostBasketballButton()
+        public async Task<JsonResult> OnPostBasketballButton()
         {
             _session.SelectedSportType = 2;
+            UpcomingGames = await _context.Set<UpcomingGame>()
+                .FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity)
+                .ToListAsync();
+            return new JsonResult("Chosen basketball");
         }
+
         //Clicking VolleyballButton
-        public void OnPostVolleyballButton()
+        public async Task<JsonResult> OnPostVolleyballButton()
         {
             _session.SelectedSportType = 3;
+            UpcomingGames = await _context.Set<UpcomingGame>()
+                .FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity)
+                .ToListAsync();
+            return new JsonResult("Chosen volleyball");
         }
+
         //SignOutButton
         public async Task<IActionResult> OnPostLogOut()
         {
@@ -99,107 +127,242 @@ namespace PlayTogether.Pages
 
             return RedirectToPage("/Logging");
         }
+
+        //SelectPlaceButton
+        public async Task<JsonResult> OnPostSelectPlace(Places selectedplace)
+        {
+            _session.SelectedPlace = selectedplace;
+            return new JsonResult("Wybrano miejsce wydarzenia");
+        }
+
         //AddEventButton
-        public async Task<IActionResult> OnPostAddEvent()
+        public async Task<JsonResult> OnPostAddEvent(Games newgame)
         {
-            NewGame.HostUser = _session.LoggedId;
-            //Game.GameType = 
+            if (_session.SelectedSportType != 0)
+            {
+                if (ModelState.GetFieldValidationState("NewGame.GameDate") == ModelValidationState.Valid &&
+                    ModelState.GetFieldValidationState("NewGame.GameLength") == ModelValidationState.Valid &&
+                    ModelState.GetFieldValidationState("NewGame.Notes") == ModelValidationState.Valid &&
+                    ModelState.GetFieldValidationState("NewGame.MaxPlayers") == ModelValidationState.Valid &&
+                    ModelState.GetFieldValidationState("NewGame.Price") == ModelValidationState.Valid)
+                {
+                    NewGame.HostUser = _session.LoggedId;
+                    NewGame.GameType = _session.SelectedSportType;
+                    NewGame.PlaceId = _session.SelectedPlace.PlaceId;
+                    try
+                    {
+                        _context.Games.Add(NewGame);
+                        await _context.SaveChangesAsync();
+                        return new JsonResult("Game has been added");
+                    }
+                    catch (Exception ex)
+                    {
+                        return new JsonResult("Error while saving to database");
+                    }
+                }
 
-            return Page();
+                return new JsonResult("Validation failed");
+            }
+
+            return new JsonResult("Select sport type");
         }
+
         //AddPlaceButton
-        public async Task<IActionResult> OnPostAddPlace()
-        {
-            if (ModelState.GetFieldValidationState("NewPlace.PlaceName") == ModelValidationState.Valid)
-            {
-                try
-                {
-                    _context.Places.Add(NewPlace);
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid input");
-            }
-
-            return Page();
-        }
-        //ChangeUserDetails
-        public async Task<IActionResult> OnPostUserDetails()
+        public async Task<JsonResult> OnPostAddPlace(Places newplace)
         {
             try
             {
-                //Checking validation
-                if (ModelState.IsValid)
-                {
-                    //Checking if image was send
-                    if (ProfilePicture.PictureFile == null)
+                if (ModelState.GetFieldValidationState("NewPlace.PlaceName") == ModelValidationState.Valid)
+                    try
                     {
-                        _context.Attach(Player).State = EntityState.Modified;
-                        try
-                        {
-                            //Updating data in database
-                            Player.Modified = DateTime.Now;
-                            await _context.SaveChangesAsync();
-                            return RedirectToPage("/Index");
-                        }
-                        catch (DbUpdateConcurrencyException ex)
-                        {
-                            throw ex;
-                        }
+                        _context.Places.Add(NewPlace);
+                        await _context.SaveChangesAsync();
+                        return new JsonResult("Place added");
                     }
-                    //Processing picture send from view
-                    IFormFile picture = ProfilePicture.PictureFile;
-                    if (picture.ContentType.Contains("image"))
+                    catch (Exception ex)
                     {
-                        Stream pictureStream = picture.OpenReadStream();
-                        Google.Apis.Storage.v1.Data.Object uploadedImage;
-                        try
-                        {
-                            //Deleting existing picture
-                            await _storage.DeleteObjectAsync(_bucket.BucketName, Player.PlayerId.ToString());
-                            //Uploading picture to cloud storage
-                            await _storage.UploadObjectAsync(_bucket.BucketName, Player.PlayerId.ToString(),
-                                picture.ContentType, pictureStream);
-                            uploadedImage =
-                                await _storage.GetObjectAsync(_bucket.BucketName, Player.PlayerId.ToString());
-                        }
-                        catch (Exception ex)
-                        {
-                            //Uploading picture to cloud storage
-                            await _storage.UploadObjectAsync(_bucket.BucketName, Player.PlayerId.ToString(),
-                                picture.ContentType, pictureStream);
-                            uploadedImage =
-                                await _storage.GetObjectAsync(_bucket.BucketName, Player.PlayerId.ToString());
-                        }
+                        return new JsonResult("Error while saving to database");
+                    }
 
-                        _context.Attach(Player).State = EntityState.Modified;
-                        
-                        try
-                        {
-                            //Updating data in database
-                            Player.Modified = DateTime.Now;
-                            Player.ProfilePicture = uploadedImage.MediaLink;
-                            //_session.PictureUrl = uploadedImage.MediaLink;
-                            await _context.SaveChangesAsync();
-                            return Page();
-                        }
-                        catch (DbUpdateConcurrencyException ex)
-                        {
-                            throw ex;
-                        }
-                    }
-                }
+                ModelState.AddModelError(string.Empty, "Invalid input");
             }
             catch (Exception ex)
             {
             }
-            return Page();
+
+            return new JsonResult("");
+        }
+
+        //ChangeUserDetails
+        public async Task<JsonResult> OnPostUserDetails(Players player, IFormFile picture)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return new JsonResult("Invalid data");
+                Google.Apis.Storage.v1.Data.Object uploadedimage;
+                try
+                {
+                    //Sprawdzanie czy istnieje już zdjęcie profilowe dla tego użytkownika w cloud storage
+                    uploadedimage = await _storage.GetObjectAsync(_bucket.BucketName, Player.PlayerId.ToString());
+                    //Jeśli nie przesłano zdjęcia profilowego
+                    if (picture == null)
+                    {
+                        _context.Attach(Player).State = EntityState.Modified;
+                        //Aktualizacja danych w bazie danych
+                        try
+                        {
+                            Player.Modified = DateTime.Now;
+                            Player.ProfilePicture = uploadedimage.MediaLink;
+                            await _context.SaveChangesAsync();
+                            return new JsonResult("Your details has been updated");
+                        }
+                        catch (DbUpdateConcurrencyException dbex)
+                        {
+                            return new JsonResult("Error while saving to database");
+                        }
+                    }
+
+                    //Jeśli przesłano nowe zdjęcie profilowe
+                    if (picture.ContentType.Contains("image"))
+                    {
+                        //Usuwanie aktualnego zdjęcia profilowego z cloud storage
+                        await _storage.DeleteObjectAsync(_bucket.BucketName, Player.PlayerId.ToString());
+                        //Wysłanie nowego zdjęcie profilowego do cloud storage
+                        var pictureStream = picture.OpenReadStream();
+                        await _storage.UploadObjectAsync(_bucket.BucketName, Player.PlayerId.ToString(),
+                            picture.ContentType, pictureStream);
+                        //Pobranie danych nowego zdjęcia z cloud storage
+                        uploadedimage =
+                            await _storage.GetObjectAsync(_bucket.BucketName, Player.PlayerId.ToString());
+
+                        _context.Attach(Player).State = EntityState.Modified;
+                        //Aktualizacja danych w bazie danych
+                        try
+                        {
+                            Player.Modified = DateTime.Now;
+                            Player.ProfilePicture = uploadedimage.MediaLink;
+                            await _context.SaveChangesAsync();
+                            return new JsonResult("Your details has been updated");
+                        }
+                        catch (DbUpdateConcurrencyException dbex)
+                        {
+                            return new JsonResult("Error while saving to database");
+                        }
+                    }
+
+                    //Podano nie prawidłowy rodzaj pliku
+                    return new JsonResult("Invalid type of file");
+                }
+                //Jeśli w nie istnieje zdjęcie profilowe dla tego użytkownika w cloud storage
+                catch (Exception ex)
+                {
+                    //Jeśli nie przesłano zdjęcia profilowego
+                    if (picture == null)
+                    {
+                        _context.Attach(Player).State = EntityState.Modified;
+                        //Aktualizacja danych w bazie danych
+                        try
+                        {
+                            Player.Modified = DateTime.Now;
+                            await _context.SaveChangesAsync();
+                            return new JsonResult("Your details has been updated");
+                        }
+                        catch (DbUpdateConcurrencyException dbex)
+                        {
+                            return new JsonResult("Error while saving to database");
+                        }
+                    }
+
+                    //Jeśli przesłano nowe zdjęcie profilowe
+                    if (picture.ContentType.Contains("image"))
+                    {
+                        //Wysłanie nowego zdjęcie profilowego do cloud storage
+                        var pictureStream = picture.OpenReadStream();
+                        await _storage.UploadObjectAsync(_bucket.BucketName, Player.PlayerId.ToString(),
+                            picture.ContentType, pictureStream);
+                        //Pobranie danych nowego zdjęcia z cloud storage
+                        uploadedimage =
+                            await _storage.GetObjectAsync(_bucket.BucketName, Player.PlayerId.ToString());
+
+                        _context.Attach(Player).State = EntityState.Modified;
+                        //Aktualizacja danych w bazie danych
+                        try
+                        {
+                            Player.Modified = DateTime.Now;
+                            Player.ProfilePicture = uploadedimage.MediaLink;
+                            await _context.SaveChangesAsync();
+                            return new JsonResult("Your details has been updated");
+                        }
+                        catch (DbUpdateConcurrencyException dbex)
+                        {
+                            return new JsonResult("Error while saving to database");
+                        }
+                    }
+
+                    //Podano nie prawidłowy rodzaj pliku
+                    return new JsonResult("Invalid type of file");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("Request failed");
+            }
+        }
+
+        //Sign up to a game
+        public async Task<JsonResult> OnPostGameSignUp(int gameid)
+        {
+            var participant = await _context.Participants.FirstOrDefaultAsync(p => p.PlayerId == _session.LoggedId);
+
+            if (participant != null)
+            {
+                if (participant.ParticipantStatus == "U")
+                {
+                    _context.Attach(participant).State = EntityState.Modified;
+                    try
+                    {
+                        participant.ParticipantStatus = "S";
+                        await _context.SaveChangesAsync();
+                        return new JsonResult("You were signed up to the game");
+                    }
+                    catch (Exception ex)
+                    {
+                        return new JsonResult("Error while saving to database");
+                    }
+                }
+                return new JsonResult("You are already signed to this game");
+            }
+
+            var newparticiapant = new Participants();
+            newparticiapant.PlayerId = _session.LoggedId;
+            newparticiapant.GameId = gameid;
+            try
+            {
+                _context.Participants.Add(newparticiapant);
+                await _context.SaveChangesAsync();
+                return new JsonResult("You were signed up to the game");
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("Error while saving to database");
+            }
+        }
+
+        //Sign out of a game
+        public async Task<JsonResult> OnPostGameSignOut(int gameid)
+        {
+            var participant = await _context.Participants.FirstOrDefaultAsync(p => p.PlayerId == _session.LoggedId);
+            _context.Attach(participant).State = EntityState.Modified;
+            try
+            {
+                participant.ParticipantStatus = "U";
+                await _context.SaveChangesAsync();
+                return new JsonResult("You were signed out of the game");
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("Error while saving to database");
+            }
         }
     }
 }

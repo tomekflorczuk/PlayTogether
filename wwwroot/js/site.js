@@ -3,7 +3,6 @@
 
 // Write your Javascript code.
 
-
 function startTime() {
     var today = new Date();
     var h = today.getHours();
@@ -23,8 +22,10 @@ function checkTime(i) {
 }
 
 $(document).ready(function() {
-    var currtime = new Date();
-
+    //Wyświetlnie form zmiany hasła
+    $("#reset-password-button").click(function() {
+        $("#reset-password-form").show();
+    });
     //Zmiana koloru oraz id wybranego sportu
     $("#football-button").click(function(e) {
         $("#football-button").css("background-color", "crimson");
@@ -35,7 +36,6 @@ $(document).ready(function() {
         $("#volleyball-button").css("border", "0");
 
         e.preventDefault();
-
         var t = $("input[name='__RequestVerificationToken']").val();
 
         $.ajax({
@@ -44,7 +44,13 @@ $(document).ready(function() {
             {
                 "RequestVerificationToken": t
             },
-            type: "post"
+            type: "post",
+            dataType: "json",
+            success: function(msg) {
+                $("#notification").show().html(msg);
+                $("#notification").delay(1500).fadeOut("slow");
+                location.reload(true);
+            }
         });
     });
     $("#basketball-button").click(function(e) {
@@ -56,7 +62,6 @@ $(document).ready(function() {
         $("#volleyball-button").css("border", "0");
 
         e.preventDefault();
-
         var t = $("input[name='__RequestVerificationToken']").val();
 
         $.ajax({
@@ -65,7 +70,13 @@ $(document).ready(function() {
             {
                 "RequestVerificationToken": t
             },
-            type: "post"
+            type: "post",
+            dataType: "json",
+            success: function(msg) {
+                $("#notification").show().html(msg);
+                $("#notification").delay(1500).fadeOut("slow");
+                location.reload(true);
+            }
         });
     });
     $("#volleyball-button").click(function(e) {
@@ -77,7 +88,6 @@ $(document).ready(function() {
         $("#football-button").css("border", "0");
 
         e.preventDefault();
-
         var t = $("input[name='__RequestVerificationToken']").val();
 
         $.ajax({
@@ -86,12 +96,47 @@ $(document).ready(function() {
             {
                 "RequestVerificationToken": t
             },
-            type: "post"
+            type: "post",
+            dataType: "json",
+            success: function(msg) {
+                $("#notification").show().html(msg);
+                $("#notification").delay(1500).fadeOut("slow");
+                location.reload(true);
+            }
         });
     });
     //Przełączanie górnego panelu
     $("#top-panel-toogle").click(function() {
         $("#top-panel").toggle();
+    });
+    //Wybór miasta w górnym panelu
+    $("#city-select").change(function(e) {
+        e.preventDefault();
+        var t = $("input[name='__RequestVerificationToken']").val();
+        //Pobieranie id wybranego miasta
+        var cityid = $("#top-city-select option:selected").val();
+
+        $.ajax({
+            url: "/Main?handler=CityChanged",
+            type: "post",
+            data: { 'cityid': cityid },
+            dataType: "json",
+            cache: false,
+            success: function(msg) {
+                $("#notification").show().html(msg);
+                $("#notification").delay(1500).fadeOut("slow");
+                location.reload(true);
+                //("#select-place-list").options();
+            },
+            headers:
+            {
+                "RequestVerificationToken": t
+            }
+        });
+    });
+    //Przycisk przeładiowania strony
+    $("#reload-button").click(function(e) {
+        location.reload(true);
     });
     //Wyświetlenie menu usera
     $("#user-button").click(function() {
@@ -114,24 +159,115 @@ $(document).ready(function() {
         $("#user-details-form").hide();
     });
     //Zatwierdzenie szczegółów usera
-    $("#confirm-add-place-button").click(function(e) {
-        /*
-e.preventDefault();
-var t = $("input[name='__RequestVerificationToken']").val();
-
-$.ajax({
-    url: $(this).attr("formaction"),
-    headers:
-    {
-        "RequestVerificationToken":
-            t
-    },
-    type: "post"
+    $("#user-details-confirm").click(function (e) {
+        //Zapobiega wywołaniu domyślnej akcji
+        e.preventDefault();
+        var t = $("input[name='__RequestVerificationToken']").val();
+        //Plik zdjęcia profilowego
+        var file = $("#file-chooser").get(0).files[0];
+        //Dane zawodnika
+        var form = new FormData($("#post-user-details").get(0));
+        form.append("picture", file);
+        //Metoda ajax
+        $.ajax({
+            url: $(this).attr("formaction"),
+            type: "post",
+            data: form,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            success: function (msg) {
+                $("#user-details-form").hide();
+                $("#notification").show().html(msg);
+                $("#notification").delay(3000).fadeOut("slow");
+                location.reload(true);
+            },
+            headers: 
+            {
+                "RequestVerificationToken": t
+            }
+        });
 });
-*/
-        $("#add-place-form").hide();
-        $("#select-place-form").show();
+    //Zatwierdzanie dodania nowego miejsca
+    $("#confirm-add-place-button").click(function (e) {
+        e.preventDefault();
+        var t = $("input[name='__RequestVerificationToken']").val();
 
+        $.ajax({
+            url: $(this).attr("formaction"),
+            type: "post",
+            data: $("#post-add-place").serialize(),
+            dataType: "json",
+            success: function (msg) {
+                if (msg === "") { 
+
+                } else {
+                    $("#add-place-form").hide();
+                    $("#select-place-form").show();
+                    $("#notification").show().html(msg);
+                    $("#notification").delay(3000).fadeOut("slow");
+                }
+            },
+            headers:
+            {
+                "RequestVerificationToken": t
+            }
+        });
+    });
+    //Zatwierdzenie wyboru miejsca
+    $("#confirm-select-place-button").click(function(e) {
+        e.preventDefault();
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        var placename = $("#select-place-list option:selected").text();
+        var selectedplace = $("#post-select-place");
+        selectedplace[0][0].value = placename;
+        selectedplace = $("#post-select-place").serialize();
+
+        $.ajax({
+            url: $(this).attr("formaction"),
+            type: "post",
+            data: selectedplace,
+            dataType: "json",
+            success: function(msg) {
+                if (msg === "") {
+                } else {
+                    $("#select-place-form").hide();
+                    $("#add-event-form").show();
+                    $("#notification").show().html(msg);
+                    $("#notification").delay(3000).fadeOut("slow");
+                }
+            },
+            headers:
+            {
+                "RequestVerificationToken": t
+            }
+        });
+    });
+    //Zatwierdzenie dodania wydarzenia
+    $("#confirm-add-game-button").click(function(e) {
+        e.preventDefault();
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        $.ajax({
+            url: $(this).attr("formaction"),
+            type: "post",
+            data: $("#post-add-game").serialize(),
+            dataType: "json",
+            success: function(msg) {
+                if (msg === "") {
+                } else {
+                    $("#add-event-form").hide();
+                    $("#notification").show().html(msg);
+                    $("#notification").delay(3000).fadeOut("slow");
+                    location.reload(true);
+                }
+            },
+            headers:
+            {
+                "RequestVerificationToken": t
+            }
+        });
     });
     //Wyświetlanie menu wyboru pliku obrazu
     $("#upload-picture-button").click(function(e) {
@@ -166,4 +302,66 @@ $.ajax({
     $("#add-event-close-button").click(function() {
         $("#add-event-form").hide();
     });
+    //Zapisywanie się do wydarzenia
+    $(".sign-up-game-button").click(function(e) {
+        e.preventDefault();
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        var gameid = $(e.target)[0].value;
+
+        $.ajax({
+            url: $(this).attr("formaction"),
+            type: "post",
+            data: { 'gameid': gameid },
+            dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $("#notification").show().html(msg);
+                $("#notification").delay(1500).fadeOut("slow");
+                location.reload(true);
+            },
+            headers:
+            {
+                "RequestVerificationToken": t
+            }
+        });
+    });
+    //Wypisanie się z wydarzenia
+    $(".sign-out-game-button").click(function(e) {
+        e.preventDefault();
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        var gameid = $(e.target)[0].value;
+
+        $.ajax({
+            url: $(this).attr("formaction"),
+            type: "post",
+            data: { 'gameid': gameid },
+            dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $("#notification").show().html(msg);
+                $("#notification").delay(1500).fadeOut("slow");
+                location.reload(true);
+            },
+            headers:
+            {
+                "RequestVerificationToken": t
+            }
+        });
+    });
+    //Otwarcie informacji o wydarzeniu
+    $(".game-details-button").click(function() {
+        $(".game-detail-form").show();
+    });
+    //Zamknięcie informacji o wydarzeniu
+    $("#game-details-close-button").click(function() {
+        $(".game-detail-form").hide();
+    })
+    //Ustawienie koloru wydarzenia
+    /*
+    $(".game-component").load(function () {
+        //if($(e.target))
+    });
+    */
 });

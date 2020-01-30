@@ -66,6 +66,8 @@ body {
     width: 100%;
 }
 
+.orangered{ color: orangered;}
+
 .bg-orangered { background: linear-gradient(90deg, rgba(255, 136, 0, 1) 0, rgba(255, 85, 0, 1) 49%, rgba(255, 0, 0, 1) 100%); }
 
 .btn {
@@ -446,6 +448,7 @@ body {
     top: 10%;
     left: 10%;
     width: 25%;
+    z-index: 950;
 }
 
 #content #user-details-form {
@@ -497,8 +500,14 @@ body {
 #content #user-details-form #file-chooser { display: none; }
 
 #content .game-component {
+    width: 20%;
+    margin-left: 1rem;
     border: solid orangered 0.2rem;
     border-radius: 1rem;
+}
+
+#content .game-component .game-details-button {
+    font-size: 2rem;
 }
 
 #content .games-not-found {
@@ -506,4 +515,27 @@ body {
     font-weight: bold;
     font-size: 3.5rem;
     margin-top: 15rem;
+}
+
+#content .game-detail-form {
+    display: none;
+    position: fixed;
+    top: 35%;
+    left: 35%;
+    width: 30%;
+    z-index: 950;
+}
+
+#content #notification {
+    display: none;
+    position: fixed;
+    left: 45%;
+    top: 45%;
+    color: black;
+    font-weight: bold;
+    background-color: greenyellow;
+    border: solid black 0.2rem;
+    border-radius: 0.5rem;
+    padding: 0.8rem;
+    z-index: 1000;
 }

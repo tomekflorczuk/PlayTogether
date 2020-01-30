@@ -1,5 +1,7 @@
 ﻿@page
+@using System.ComponentModel.DataAnnotations
 @using Microsoft.CodeAnalysis.CSharp.Syntax
+@using Microsoft.EntityFrameworkCore
 @using PlayTogether.Models
 @model MainModel;
 @{
@@ -26,13 +28,109 @@
     }
     else
     {
-        <div class="row"></div>
-        @foreach (var game in Model.UpcomingGames)
-        {
-            <div class="game-component col-4">
-
-            </div>
-        }
+        <div class="row m-0">
+            @foreach (var game in Model.UpcomingGames)
+            {
+                List<Participants> participants = await Model._context.Set<Participants>()
+                    .FromSqlRaw("Call ListParticipantsInGame(@p0)", game.GameId).ToListAsync();
+                bool isParticipant = false;
+                <div class="game-component col-3 p-0">
+                    <div class="form-header">
+                        <div class="text-center pt-1 pb-1">Game</div>
+                    </div>
+                    <div class="p-2">
+                        <div>
+                            <b>Date</b>
+                            @Html.DisplayFor(model => game.GameDate)
+                        </div>
+                        <div>
+                            <b>Duration:</b>
+                            @Html.DisplayFor(model => game.GameLength)
+                        </div>
+                        <div>
+                            <b>Place:</b>
+                            @Html.DisplayFor(model => game.PlaceName)
+                        </div>
+                        <div>
+                            <b>Host:</b>
+                            @Html.DisplayFor(model => game.FirstName)
+                            @Html.DisplayFor(model => game.LastName)
+                        </div>
+                        <div>
+                            <b>Eventual price:</b>
+                            @Html.DisplayFor(model => game.Price)
+                        </div>
+                        <div>
+                            <b>Players:</b>
+                            @{
+                                var amount = await Model._context.Set<GameParticipants>().FromSqlRaw("CALL CountPlayersInGame(@p0)", game.GameId).ToListAsync();
+                            }
+                            @Html.DisplayFor(model => amount.FirstOrDefault().Amount)
+                            /@Html.DisplayFor(model => game.MaxPlayers)
+                        </div>
+                        <input class="upcoming-game-type" type="hidden" @Html.DisplayFor(model => game.GameType)/>
+                        <div class="row">
+                            <div class="col-5 mb-2">
+                                <button asp-page-handler="GameSignUp" type="button" class="sign-up-game-button btn bg-orangered" value="@game.GameId">
+                                    Sign in
+                                </button>
+                            </div>
+                            @foreach (var participant in participants.Where(participant => participant.PlayerId == Model._session.LoggedId))
+                            {
+                                isParticipant = true;
+                            }
+                            @if (isParticipant)
+                            {
+                                <div class="col-5 mb-2">
+                                    <button asp-page-handler="GameSignOut" type="button" class="sign-out-game-button btn bg-orangered" value="@game.GameId">
+                                        Sign out
+                                    </button>
+                                </div>
+                            }
+                            <div class="col-2 text-center mt-2">
+                                <button type="button" class="game-details-button bg-transparent orangered border-0">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-detail-form form">
+                    <div class="form-header row">
+                        <div class="col-10 text-center mt-2 pt-1">Game details</div>
+                        <button id="game-details-close-button" type="button" class="col-2 close-button">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
+                    <div class="p-2">
+                        <div>
+                            <label><b>About:</b></label><br/>
+                            @game.Notes
+                        </div>
+                        <div>
+                            <label><b>Created:</b></label>
+                            @game.Created
+                        </div>
+                        <div>
+                            <label><b>City:</b></label>
+                            @game.CityName
+                        </div>
+                        <div>
+                            <label><b>Pitch surface:</b></label>
+                            @game.SurfaceName
+                        </div>
+                        <div>
+                            <label><b>Uczestnicy:</b></label><br/>
+                            @foreach (var participant in participants)
+                                {
+                                    @participant.PlayerId
+                                    <br/>
+                                }
+                        </div>
+                        </div>
+                </div>
+            }
+        </div>
     }
 </div>
 <div id="add-event-form">
@@ -43,7 +141,7 @@
         </button>
     </div>
     <div class="p-2">
-        <form method="post">
+        <form method="post" id="post-add-game">
             @Html.AntiForgeryToken()
             <div class="row">
                 <div class="col-7">
@@ -79,14 +177,18 @@
                         <button id="place-search" type="button" class="place-search">
                             <i class="fas fa-ellipsis-h"></i>
                         </button>
-                    </div>
-                    <div asp-validation-summary="ModelOnly"></div>
-                    <div class="text-center">
-                        <button asp-page-handler="AddEvent" type="submit" class="btn bg-orangered">Add Event</button>
+                        @if (@Html.DisplayFor(model => model.SelectedPlace.PlaceName) != null)
+                        {
+                            @Html.DisplayFor(model => model.SelectedPlace.PlaceName)
+                        }
                     </div>
                 </div>
             </div>
         </form>
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="text-center">
+            <button asp-page-handler="AddEvent" id="confirm-add-game-button" type="button" class="btn bg-orangered">Add Event</button>
+        </div>
     </div>
 </div>
 <div id="select-place-form" class="form">
@@ -97,11 +199,15 @@
         </button>
     </div>
     <div class="p-2">
-        <div>
-        </div>
+        <form method="post" id="post-select-place">
+            <input asp-for="SelectedPlace.PlaceName" type="hidden"/>
+            <div>
+                <select asp-for="SelectedPlace.PlaceId" id="select-place-list" class="form-control" asp-items="ViewBag.SelectPlace"></select>
+            </div>
+        </form>
         <div class="row">
             <div class="col-6">
-                <button type="button" class="btn bg-orangered">
+                <button asp-page-handler="SelectPlace" id="confirm-select-place-button" type="button" class="btn bg-orangered">
                     Select
                 </button>
             </div>
@@ -121,7 +227,7 @@
         </button>
     </div>
     <div class="p-2">
-        <form method="post">
+        <form method="post" id="post-add-place">
             @Html.AntiForgeryToken()
             <div class="form-group">
                 <label asp-for="NewPlace.CityId"></label>
@@ -138,10 +244,12 @@
                 <select asp-for="NewPlace.SurfaceId" class="form-control" asp-items="ViewBag.SelectSurfaces"></select>
                 <span asp-validation-for="NewPlace.SurfaceId"></span>
             </div>
-            <div>
-                <button asp-page-handler="AddPlace" id="confirm-add-place-button" type="submit" class="btn bg-orangered">Add place</button>
-            </div>
         </form>
+        <div>
+            <button asp-page-handler="AddPlace" id="confirm-add-place-button" type="button" class="btn bg-orangered">
+                Add place
+            </button>
+        </div>
     </div>
 </div>
 <div id="user-details-form">
@@ -152,7 +260,7 @@
         </button>
     </div>
     <div class="p-2">
-        <form enctype="multipart/form-data" method="post">
+        <form enctype="multipart/form-data" method="post" id="post-user-details">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Player.PlayerId"/>
             <div class="row">
@@ -181,7 +289,14 @@
                 <div class="col-5">
                     <label>@Html.DisplayNameFor(model => model.Player.ProfilePicture)</label>
                     <div class="profile-picture">
-                        <img src="@Html.DisplayFor(model => model.Player.ProfilePicture)" alt="profile picture"/>
+                        @if (Model.Player.ProfilePicture == null)
+                        {
+                            <div class="text-center">No profile picture</div>
+                        }
+                        else
+                        {
+                            <img src="@Html.DisplayFor(model => model.Player.ProfilePicture)" alt="profile picture"/>
+                        }
                     </div>
                 </div>
             </div>
@@ -200,17 +315,18 @@
             </div>
             <input type="hidden" asp-for="Player.Modified"/>
             <input type="hidden" asp-for="Player.Users"/>
-            <div asp-validation-summary="ModelOnly"></div>
-            <div class="row">
-                <div class="col-6">
-                    <button asp-page-handler="UserDetails" id="user-details-confirm" type="submit" class="btn bg-orangered text-center">Confirm</button>
-                </div>
-                <div class="col-6 text-right">
-                    <input asp-for="ProfilePicture.PictureFile" type="file" id="file-chooser" title="Select your profile picture"/>
-                    <button id="upload-picture-button" type="button" class="btn bg-orangered text-center">Upload picture</button>
-                    <div class="profile-picture-result"></div>
-                </div>
-            </div>
         </form>
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="row">
+            <div class="col-6">
+                <button asp-page-handler="UserDetails" id="user-details-confirm" type="button" class="btn bg-orangered text-center">Confirm</button>
+            </div>
+            <div class="col-6 text-right">
+                <input type="file" id="file-chooser" accept="image/*" title="Select your profile picture"/>
+                <button id="upload-picture-button" type="button" class="btn bg-orangered text-center">Upload picture</button>
+                <div class="profile-picture-result"></div>
+            </div>
+        </div>
     </div>
 </div>
+<div id="notification"></div>

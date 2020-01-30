@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PlayTogether.Models;
-using System.Web;
 using System.Web.Helpers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using PlayTogether.Data;
@@ -31,6 +30,7 @@ namespace PlayTogether.Pages
 
         [BindProperty] public Models.Users Users { get; set; }
         [BindProperty] public Players Players { get; set; }
+        [BindProperty] public PasswordConfirmation passwords { get; set; }
 
         ///Checking if user is already logged in
         public IActionResult OnGet()
@@ -61,20 +61,26 @@ namespace PlayTogether.Pages
                     if (logininfo != null && logininfo.Any())
                     {
                         var logindetails = logininfo.First();
-                        await SignInUser(logindetails.Login, false);
-                        _session.LoggedId = logindetails.User_Id;
-                        return RedirectToPage("/Main");
+                        if (logindetails.UserStatus == 'A')
+                        {
+                            await SignInUser(logindetails.Login, false);
+                            _session.LoggedId = logindetails.UserId;
+                            return RedirectToPage("/Main");
+                        }
+                        ModelState.AddModelError(string.Empty, "Account is inactive");
+                        return Page();
                     }
                     ModelState.AddModelError(string.Empty, "Invalid login or password");
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                ModelState.AddModelError(string.Empty, "Unknown error");
             }
 
             return Page();
         }
+        //Authorizing user
         private async Task SignInUser(string login, bool isPersistent)
         {
             var claims = new List<Claim>();
@@ -94,15 +100,15 @@ namespace PlayTogether.Pages
                 throw ex;
             }
         }
-        //RegisterButton
+        //Register button
         public async Task<IActionResult> OnPostSignUp()
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var loginduplicate = await _context.Set<Logging>().FromSqlRaw("CALL CheckLoginDuplicate (@p0)", parameters: new[] {Users.Login}).ToListAsync();
-                    var mailduplicate = await _context.Set<Logging>().FromSqlRaw("CALL CheckEmailDuplicate (@p0)", parameters: new[] {Users.Email}).ToListAsync();
+                    var loginduplicate = await _context.Set<Models.Users>().FromSqlRaw("CALL CheckLoginDuplicate (@p0)", parameters: new[] {Users.Login}).ToListAsync();
+                    var mailduplicate = await _context.Set<Models.Users>().FromSqlRaw("CALL CheckEmailDuplicate (@p0)", parameters: new[] {Users.Email}).ToListAsync();
 
 
                     if (loginduplicate.Any())
@@ -128,11 +134,26 @@ namespace PlayTogether.Pages
                     _session.LoggedId = Users.UserId;
                     return RedirectToPage("/Main");
                 }
+                ModelState.AddModelError(string.Empty,"Validation failed");
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+            return Page();
+        }
+        //Reset password
+        public async Task<IActionResult> OnPostResetPassword()
+        {
+            if (passwords.Password1 == passwords.Password2)
+            {
+                var newpassword = Crypto.SHA256(passwords.Password1);
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Passwords are not the same");
+            }
+
             return Page();
         }
     }

@@ -21,27 +21,24 @@ namespace PlayTogether.Data
         }
 
         public virtual DbSet<Games> Games { get; set; }
-        public virtual DbSet<GamesLog> GamesLog { get; set; }
         public virtual DbSet<Participants> Participants { get; set; }
-        public virtual DbSet<ParticipantsLog> ParticipantsLog { get; set; }
         public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<Players> Players { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<SportTypes> SportTypes { get; set; }
         public virtual DbSet<Surfaces> Surfaces { get; set; }
         public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<UsersLog> UsersLog { get; set; }
         public virtual DbSet<UpcomingGame> UpcomingGames { get; set; }
         public virtual DbSet<Cities> ListCities { get; set; }
         public virtual DbSet<Surfaces> ListSurfaces { get; set; }
+        public virtual DbSet<GameParticipants> GameParticipants { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=35.228.101.173;database=PlayTogether;uid=root;pwd=Hanusia22",
-                    x => x.ServerVersion("5.7.14-mysql"));
+                //optionsBuilder.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
+                //   x => x.ServerVersion("5.7.14-mysql"));
             }
         }
 
@@ -110,7 +107,7 @@ namespace PlayTogether.Data
 
                 entity.Property(e => e.GameType)
                     .HasColumnName("game_type")
-                    .HasColumnType("tinyint(4)")
+                    .HasColumnType("int(11)")
                     .HasComment("Klucz obcy - typ wydarzenia, 1 - piłka nożna, 2 - koszykówka, 3 - siatkówka");
 
                 entity.Property(e => e.HostUser)
@@ -139,12 +136,12 @@ namespace PlayTogether.Data
 
                 entity.Property(e => e.PlaceId)
                     .HasColumnName("place_id")
-                    .HasColumnType("tinyint(4)")
+                    .HasColumnType("int(11)")
                     .HasComment("Klucz obcy - miejsce wydarzenia");
 
                 entity.Property(e => e.Price)
                     .HasColumnName("price")
-                    .HasColumnType("tinyint(4)")
+                    .HasColumnType("int(11)")
                     .HasComment("Cena od jednego uczestnika");
 
                 entity.HasOne(d => d.GameTypeNavigation)
@@ -164,126 +161,6 @@ namespace PlayTogether.Data
                     .HasForeignKey(d => d.PlaceId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_games_places");
-            });
-
-            modelBuilder.Entity<GamesLog>(entity =>
-            {
-                entity.HasKey(e => e.ModificationId)
-                    .HasName("PRIMARY");
-
-                entity.Property(e => e.ModificationId)
-                    .HasColumnName("modification_id")
-                    .HasColumnType("int(11)")
-                    .HasComment("Primary key");
-
-                entity.Property(e => e.ModificationTime)
-                    .HasColumnName("modification_time")
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                entity.Property(e => e.ModificationType)
-                    .IsRequired()
-                    .HasColumnName("modification_type")
-                    .HasColumnType("char(1)")
-                    .HasComment("U-update, I-insert, D-delete")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.Modifier)
-                    .IsRequired()
-                    .HasColumnName("modifier")
-                    .HasColumnType("varchar(25)")
-                    .HasComment("Użytkownik wprowadzający zmianę")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.NewGameDate)
-                    .HasColumnName("new_game_date")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.NewGameId)
-                    .HasColumnName("new_game_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.NewGameLength)
-                    .HasColumnName("new_game_length")
-                    .HasColumnType("time");
-
-                entity.Property(e => e.NewGameStatus)
-                    .HasColumnName("new_game_status")
-                    .HasColumnType("char(1)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.NewGameType)
-                    .HasColumnName("new_game_type")
-                    .HasColumnType("tinyint(4)");
-
-                entity.Property(e => e.NewHostUser)
-                    .HasColumnName("new_host_user")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.NewMaxPlayers)
-                    .HasColumnName("new_max_players")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.NewNotes)
-                    .HasColumnName("new_notes")
-                    .HasColumnType("varchar(256)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.NewPlaceId)
-                    .HasColumnName("new_place_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.NewPrice)
-                    .HasColumnName("new_price")
-                    .HasColumnType("tinyint(4)");
-
-                entity.Property(e => e.OldGameDate)
-                    .HasColumnName("old_game_date")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.OldGameId)
-                    .HasColumnName("old_game_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.OldGameLength)
-                    .HasColumnName("old_game_length")
-                    .HasColumnType("time");
-
-                entity.Property(e => e.OldGameStatus)
-                    .HasColumnName("old_game_status")
-                    .HasColumnType("char(1)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.OldGameType)
-                    .HasColumnName("old_game_type")
-                    .HasColumnType("tinyint(4)");
-
-                entity.Property(e => e.OldHostUser)
-                    .HasColumnName("old_host_user")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.OldMaxPlayers)
-                    .HasColumnName("old_max_players")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.OldNotes)
-                    .HasColumnName("old_notes")
-                    .HasColumnType("varchar(256)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.OldPlaceId)
-                    .HasColumnName("old_place_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.OldPrice)
-                    .HasColumnName("old_price")
-                    .HasColumnType("tinyint(4)");
             });
 
             modelBuilder.Entity<Participants>(entity =>
@@ -330,7 +207,7 @@ namespace PlayTogether.Data
                     .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.PlayerId)
-                    .HasColumnName("user_id")
+                    .HasColumnName("player_id")
                     .HasColumnType("int(11)")
                     .HasComment("Klucz obcy - Zawodnik");
 
@@ -347,74 +224,6 @@ namespace PlayTogether.Data
                     .HasConstraintName("fk_partcipant_user");
             });
 
-            modelBuilder.Entity<ParticipantsLog>(entity =>
-            {
-                entity.HasKey(e => e.ModificationId)
-                    .HasName("PRIMARY");
-
-                entity.Property(e => e.ModificationId)
-                    .HasColumnName("modification_id")
-                    .HasColumnType("int(11)")
-                    .HasComment("Primary key");
-
-                entity.Property(e => e.ModificationTime)
-                    .HasColumnName("modification_time")
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                entity.Property(e => e.ModificationType)
-                    .IsRequired()
-                    .HasColumnName("modification_type")
-                    .HasColumnType("char(1)")
-                    .HasComment("U-update, I-insert, D-delete")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.Modifier)
-                    .IsRequired()
-                    .HasColumnName("modifier")
-                    .HasColumnType("varchar(25)")
-                    .HasComment("Użytkownik wprowadzający zmianę")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.NewGameId)
-                    .HasColumnName("new_game_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.NewParticiapntId)
-                    .HasColumnName("new_particiapnt_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.NewParticipantStatus)
-                    .HasColumnName("new_participant_status")
-                    .HasColumnType("char(1)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.NewUserId)
-                    .HasColumnName("new_user_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.OldGameId)
-                    .HasColumnName("old_game_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.OldParticipantId)
-                    .HasColumnName("old_participant_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.OldParticipantStatus)
-                    .HasColumnName("old_participant_status")
-                    .HasColumnType("char(1)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.OldUserId)
-                    .HasColumnName("old_user_id")
-                    .HasColumnType("int(11)");
-            });
-
             modelBuilder.Entity<Places>(entity =>
             {
                 entity.HasKey(e => e.PlaceId)
@@ -429,25 +238,25 @@ namespace PlayTogether.Data
 
                 entity.Property(e => e.PlaceId)
                     .HasColumnName("place_id")
-                    .HasColumnType("tinyint(4)")
+                    .HasColumnType("int(11)")
                     .HasComment("Klucz główny");
 
                 entity.Property(e => e.PlaceName)
                     .IsRequired()
                     .HasColumnName("place_name")
-                    .HasColumnType("varchar(25)")
+                    .HasColumnType("varchar(50)")
                     .HasComment("Nazwa/adres boiska")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.CityId)
                     .HasColumnName("city_id")
-                    .HasColumnType("tinyint(4)")
+                    .HasColumnType("int(11)")
                     .HasComment("Klucz obcy - miasto wydarzenia");
 
                 entity.Property(e => e.SurfaceId)
                     .HasColumnName("surface_id")
-                    .HasColumnType("tinyint(4)")
+                    .HasColumnType("int(11)")
                     .HasComment("Klucz obcy - typ nawierchni");
 
                 entity.Property(e => e.X)
@@ -539,7 +348,7 @@ namespace PlayTogether.Data
 
                 entity.Property(e => e.RoleId)
                     .HasColumnName("role_id")
-                    .HasColumnType("tinyint(4)")
+                    .HasColumnType("int(11)")
                     .HasComment("Klucz główny");
 
                 entity.Property(e => e.RoleName)
@@ -563,7 +372,7 @@ namespace PlayTogether.Data
 
                 entity.Property(e => e.TypeId)
                     .HasColumnName("type_id")
-                    .HasColumnType("tinyint(4)")
+                    .HasColumnType("int(11)")
                     .HasComment("Klucz główny");
 
                 entity.Property(e => e.SportType)
@@ -585,7 +394,7 @@ namespace PlayTogether.Data
 
                 entity.Property(e => e.SurfaceId)
                     .HasColumnName("surface_id")
-                    .HasColumnType("tinyint(4)")
+                    .HasColumnType("int(11)")
                     .HasComment("Klucz główny");
 
                 entity.Property(e => e.SurfaceName)
@@ -665,7 +474,7 @@ namespace PlayTogether.Data
 
                 entity.Property(e => e.RoleId)
                     .HasColumnName("role_id")
-                    .HasColumnType("tinyint(4)")
+                    .HasColumnType("int(11)")
                     .HasDefaultValueSql("'3'")
                     .HasComment("Klucz obcy, 1-admin, 2-moderator, 3-user");
 
@@ -691,164 +500,51 @@ namespace PlayTogether.Data
                     .HasConstraintName("fk_user_role");
             });
 
-            modelBuilder.Entity<UsersLog>(entity =>
-            {
-                entity.HasKey(e => e.ModificationId)
-                    .HasName("PRIMARY");
-
-                entity.Property(e => e.ModificationId)
-                    .HasColumnName("modification_id")
-                    .HasColumnType("int(11)")
-                    .HasComment("Primary key");
-
-                entity.Property(e => e.ModificationTime)
-                    .HasColumnName("modification_time")
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                entity.Property(e => e.ModificationType)
-                    .IsRequired()
-                    .HasColumnName("modification_type")
-                    .HasColumnType("char(1)")
-                    .HasComment("U-update, I-insert, D-delete")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.Modifier)
-                    .IsRequired()
-                    .HasColumnName("modifier")
-                    .HasColumnType("varchar(25)")
-                    .HasComment("Użytkownik wprowadzający zmianę")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.NewEmail)
-                    .HasColumnName("new_email")
-                    .HasColumnType("varchar(30)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.NewLogin)
-                    .HasColumnName("new_login")
-                    .HasColumnType("varchar(20)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.NewPassword)
-                    .HasColumnName("new_password")
-                    .HasColumnType("varchar(25)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.NewPlayerId)
-                    .HasColumnName("new_player_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.NewRoleId)
-                    .HasColumnName("new_role_id")
-                    .HasColumnType("tinyint(4)");
-
-                entity.Property(e => e.NewUserId)
-                    .HasColumnName("new_user_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.NewUserStatus)
-                    .HasColumnName("new_user_status")
-                    .HasColumnType("char(1)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.OldEmail)
-                    .HasColumnName("old_email")
-                    .HasColumnType("varchar(30)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.OldLogin)
-                    .HasColumnName("old_login")
-                    .HasColumnType("varchar(20)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.OldPassword)
-                    .HasColumnName("old_password")
-                    .HasColumnType("varchar(25)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.OldPlayerId)
-                    .HasColumnName("old_player_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.OldRoleId)
-                    .HasColumnName("old_role_id")
-                    .HasColumnType("tinyint(4)");
-
-                entity.Property(e => e.OldUserId)
-                    .HasColumnName("old_user_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.OldUserStatus)
-                    .HasColumnName("old_user_status")
-                    .HasColumnType("char(1)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-            });
-
-            modelBuilder.Entity<Logging>(entity => { entity.HasNoKey(); });
-
             modelBuilder.Entity<UpcomingGame>(entity =>
             {
                 entity.HasNoKey();
-                entity.ToView("UpcomingActiveGames");
-                entity.Property(v => v.HostUser).HasColumnName("host_user");
-                entity.Property(v => v.GameDate).HasColumnName("game_date");
-                entity.Property(v => v.GameLength).HasColumnName("game_length");
-                entity.Property(v => v.GameType).HasColumnName("game_type");
-                entity.Property(v => v.MaxPlayers).HasColumnName("max_players");
-                entity.Property(v => v.Price).HasColumnName("price");
-                entity.Property(v => v.PlaceId).HasColumnName("place_id");
-                entity.Property(v => v.Created).HasColumnName("created");
-                entity.Property(v => v.Notes).HasColumnName("notes");
+                entity.Property(e => e.GameId).HasColumnName("game_id");
+                entity.Property(e => e.PlaceId).HasColumnName("place_id");
+                entity.Property(e => e.FirstName).HasColumnName("first_name");
+                entity.Property(e => e.LastName).HasColumnName("last_name");
+                entity.Property(e => e.GameDate).HasColumnName("game_date");
+                entity.Property(e => e.GameLength).HasColumnName("game_length");
+                entity.Property(e => e.GameType).HasColumnName("game_type");
+                entity.Property(e => e.MaxPlayers).HasColumnName("max_players");
+                entity.Property(e => e.Price).HasColumnName("price");
+                entity.Property(e => e.Created).HasColumnName("created");
+                entity.Property(e => e.Notes).HasColumnName("notes");
+                entity.Property(e => e.Modified).HasColumnName("modified");
+                entity.Property(e => e.PlaceName).HasColumnName("place_name");
+                entity.Property(e => e.CityName).HasColumnName("city_name");
+                entity.Property(e => e.SurfaceName).HasColumnName("surface_name");
             });
 
             modelBuilder.Entity<Cities>(entity => { entity.ToView("ListCities"); });
 
             modelBuilder.Entity<Surfaces>(entity => { entity.ToView("ListSurfaces"); });
 
-            modelBuilder.Entity<Games>(entity =>
+            modelBuilder.Entity<GameParticipants>(entity =>
             {
-                entity.ToView("UpcomingFootballActiveGames");
-                entity.Property(e => e.GameId).HasColumnName("game_id");
-                entity.Property(v => v.HostUser).HasColumnName("host_user");
-                entity.Property(v => v.GameDate).HasColumnName("game_date");
-                entity.Property(v => v.GameLength).HasColumnName("game_length");
-                entity.Property(v => v.GameType).HasColumnName("game_type");
-                entity.Property(v => v.MaxPlayers).HasColumnName("max_players");
-                entity.Property(v => v.Price).HasColumnName("price");
-                entity.Property(v => v.PlaceId).HasColumnName("place_id");
-                entity.Property(v => v.Created).HasColumnName("created");
-                entity.Property(v => v.Notes).HasColumnName("notes");
-                entity.Property(v => v.Modified).HasColumnName("modified");
+                entity.HasNoKey();
+                entity.Property(e => e.Amount).HasColumnName("amount");
             });
 
             OnModelCreatingPartial(modelBuilder);
         }
 
-        public async Task<List<Logging>> LoggingMethodAsync(string plogin, string ppassword, string pmail)
+        public async Task<List<Users>> LoggingMethodAsync(string plogin, string ppassword, string pmail)
         {
-            var list = new List<Logging>();
-
+            var list = new List<Users>();
             try
             {
-                list = await Set<Logging>().FromSqlRaw("CALL Logging (@p0, @p1, @p2)", new[] {plogin, ppassword, pmail})
+                list = await Set<Users>().FromSqlRaw("CALL Logging (@p0, @p1, @p2)", new[] {plogin, ppassword, pmail})
                     .ToListAsync();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-
             return list;
         }
 

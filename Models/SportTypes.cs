@@ -15,9 +15,8 @@ namespace PlayTogether.Models
         }
 
         [Key]
-        public sbyte TypeId { get; set; }
+        public int TypeId { get; set; }
         public string SportType { get; set; }
-
         public virtual ICollection<Games> Games { get; set; }
     }
 }

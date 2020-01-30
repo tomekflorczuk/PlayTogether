@@ -15,9 +15,8 @@ namespace PlayTogether.Models
         }
 
         [Key]
-        public sbyte RoleId { get; set; }
+        public int RoleId { get; set; }
         public string RoleName { get; set; }
-
         public virtual ICollection<Users> Users { get; set; }
     }
 }

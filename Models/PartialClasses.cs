@@ -26,4 +26,10 @@ namespace PlayTogether.Models
     public partial class Places
     {
     }
+
+    [ModelMetadataType(typeof(PasswordsConfirmationMetadata))]
+    public partial class PasswordConfirmation
+    {
+
+    }
 }

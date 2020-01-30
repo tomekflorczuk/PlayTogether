@@ -14,7 +14,7 @@ namespace PlayTogether.Models
         }
 
         [Key]
-        public sbyte SurfaceId { get; set; }
+        public int SurfaceId { get; set; }
         public string SurfaceName { get; set; }
         public virtual ICollection<Places> Places { get; set; }
     }

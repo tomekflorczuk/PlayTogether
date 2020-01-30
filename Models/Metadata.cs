@@ -22,20 +22,21 @@ namespace PlayTogether.Models
         [DataType(DataType.Password)]
         [Display(Name= "Password")]
         [MinLength(1)]
-        [MaxLength(256, ErrorMessage = "Your password is too long, it should be maximum 25 characters long ")]
+        [MaxLength(25, ErrorMessage = "Your password is too long, it should be maximum 25 characters long ")]
         public string Password { get; set; }
         
         [Required]
         [DataType(DataType.EmailAddress)]
         [EmailAddress]
+        [RegularExpression("^([a-zA-Z0-9_\\.\\-]+)@([a-zA-Z0-9-]+.)[a-zA-Z]{2,6}$", 
+            ErrorMessage = "Invalid format of email address")]
         [Display(Name = "E-mail address")]
-        [MinLength(1)]
+        [MinLength(5)]
         [MaxLength(30, ErrorMessage = "Your e-mail is too long, it should be maximum 30 characters long")]
         public string Email { get; set; }
 
         [Display(Name = "Account created")]
         public DateTime Created { get; set; }
-
     }
     public class PlayersMetadata
     {
@@ -59,7 +60,7 @@ namespace PlayTogether.Models
         public string Nickname { get; set; }
 
         [Required]
-        [DataType(DataType.Date)]
+        [DataType(DataType.Date, ErrorMessage = "Invalid date")]
         [Display(Name = "Birth day")]
         public DateTime BirthDate { get; set; }
 
@@ -68,8 +69,7 @@ namespace PlayTogether.Models
         [MaxLength(256)]
         public string Bio { get; set; }
 
-        //[DataType(DataType.ImageUrl)]
-        [DataType(DataType.Upload)]
+        [DataType(DataType.ImageUrl)]
         [Display(Name = "Profile picture")]
         public string ProfilePicture { get; set; }
 
@@ -97,7 +97,7 @@ namespace PlayTogether.Models
 
         [DataType(DataType.Currency)]
         [Display(Name = "Price per person")]
-        public sbyte? Price { get; set; }
+        public int? Price { get; set; }
 
         [DataType(DataType.MultilineText)]
         [MaxLength(256)]
@@ -112,13 +112,29 @@ namespace PlayTogether.Models
         [DataType(DataType.Text)]
         [Display(Name = "Place name")]
         [MinLength(5)]
-        [MaxLength(25)]
+        [MaxLength(50)]
         public string PlaceName { get; set; }
 
         [Display(Name = "City")]
-        public sbyte CityId { get; set; }
+        public int CityId { get; set; }
 
         [Display(Name = "Surface of the field")]
-        public sbyte SurfaceId { get; set; }
+        public int SurfaceId { get; set; }
     }
+    public class PasswordsConfirmationMetadata
+    {/*
+        [Required(ErrorMessage = "New Password is required")]
+        [DataType(DataType.Password)]
+        [Display(Name = "New password")]
+        [MinLength(1)]
+        [MaxLength(25, ErrorMessage = "Your password is too long, it should be maximum 25 characters long ")]
+        public string Password1 { get; set; }
+        [Required(ErrorMessage = "Password confirmation is required")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Repeat new password")]
+        [MinLength(1)]
+        [MaxLength(25, ErrorMessage = "Your password is too long, it should be maximum 25 characters long ")]
+        public string Password2 { get; set; }
+    */
+        }
 }

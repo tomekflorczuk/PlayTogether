@@ -18,10 +18,10 @@ namespace PlayTogether.Models
         public int HostUser { get; set; }
         public DateTime GameDate { get; set; }
         public TimeSpan GameLength { get; set; }
-        public sbyte GameType { get; set; }
+        public int GameType { get; set; }
         public int MaxPlayers { get; set; }
-        public sbyte? Price { get; set; }
-        public sbyte PlaceId { get; set; }
+        public int? Price { get; set; }
+        public int PlaceId { get; set; }
         public DateTime Created { get; set; }
         public string GameStatus { get; set; }
         public string Notes { get; set; }

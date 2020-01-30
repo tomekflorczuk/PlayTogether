@@ -13,10 +13,10 @@ namespace PlayTogether.Models
         }
 
         [Key]
-        public sbyte PlaceId { get; set; }
+        public int PlaceId { get; set; }
         public string PlaceName { get; set; }
-        public sbyte CityId { get; set; }
-        public sbyte SurfaceId { get; set; }
+        public int CityId { get; set; }
+        public int SurfaceId { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
 
