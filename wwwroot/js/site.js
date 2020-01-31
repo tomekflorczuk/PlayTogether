@@ -306,7 +306,6 @@ $(document).ready(function() {
     $(".sign-up-game-button").click(function(e) {
         e.preventDefault();
         var t = $("input[name='__RequestVerificationToken']").val();
-
         var gameid = $(e.target)[0].value;
 
         $.ajax({
@@ -330,7 +329,6 @@ $(document).ready(function() {
     $(".sign-out-game-button").click(function(e) {
         e.preventDefault();
         var t = $("input[name='__RequestVerificationToken']").val();
-
         var gameid = $(e.target)[0].value;
 
         $.ajax({
@@ -355,13 +353,20 @@ $(document).ready(function() {
         $(".game-detail-form").show();
     });
     //Zamknięcie informacji o wydarzeniu
-    $("#game-details-close-button").click(function() {
+    $(".game-details-close-button").click(function() {
         $(".game-detail-form").hide();
-    })
-    //Ustawienie koloru wydarzenia
-    /*
-    $(".game-component").load(function () {
-        //if($(e.target))
     });
-    */
+    //Ustawienie koloru wydarzenia
+    $(".game-component").each(function (index) {
+        if ($(this).find(".upcoming-game-type")[0].value === "1") {
+            $(this).css("border", "solid greenyellow 0.2rem");
+            $(this).find(".form-header").css("background-color", "greenyellow");
+        } else if ($(this).find(".upcoming-game-type")[0].value === "2") {
+            $(this).css("border", "solid lightseagreen 0.2rem");
+            $(this).find(".form-header").css("background-color", "lightseagreen");
+        } else if ($(this).find(".upcoming-game-type")[0].value === "3"){
+            $(this).css("border", "solid yellow 0.2rem");
+            $(this).find(".form-header").css("background-color", "yellow");
+        }
+    });
 });

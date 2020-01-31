@@ -502,6 +502,7 @@ body {
 #content .game-component {
     width: 20%;
     margin-left: 1rem;
+    margin-top: 1rem;
     border: solid orangered 0.2rem;
     border-radius: 1rem;
 }

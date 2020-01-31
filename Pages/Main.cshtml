@@ -31,9 +31,9 @@
         <div class="row m-0">
             @foreach (var game in Model.UpcomingGames)
             {
-                List<Participants> participants = await Model._context.Set<Participants>()
+                var participants = await Model._context.Set<Participants>()
                     .FromSqlRaw("Call ListParticipantsInGame(@p0)", game.GameId).ToListAsync();
-                bool isParticipant = false;
+                var isParticipant = false;
                 <div class="game-component col-3 p-0">
                     <div class="form-header">
                         <div class="text-center pt-1 pb-1">Game</div>
@@ -68,25 +68,25 @@
                             @Html.DisplayFor(model => amount.FirstOrDefault().Amount)
                             /@Html.DisplayFor(model => game.MaxPlayers)
                         </div>
-                        <input class="upcoming-game-type" type="hidden" @Html.DisplayFor(model => game.GameType)/>
+                        <input class="upcoming-game-type" type="hidden" value="@game.GameType"/>
                         <div class="row">
                             <div class="col-5 mb-2">
                                 <button asp-page-handler="GameSignUp" type="button" class="sign-up-game-button btn bg-orangered" value="@game.GameId">
                                     Sign in
                                 </button>
                             </div>
-                            @foreach (var participant in participants.Where(participant => participant.PlayerId == Model._session.LoggedId))
-                            {
-                                isParticipant = true;
-                            }
-                            @if (isParticipant)
-                            {
-                                <div class="col-5 mb-2">
+                            <div class="col-5 mb-2">
+                                @foreach (var participant in participants.Where(participant => participant.PlayerId == Model._session.LoggedId))
+                                {
+                                    isParticipant = true;
+                                }
+                                @if (isParticipant)
+                                {
                                     <button asp-page-handler="GameSignOut" type="button" class="sign-out-game-button btn bg-orangered" value="@game.GameId">
                                         Sign out
                                     </button>
-                                </div>
-                            }
+                                }
+                            </div>
                             <div class="col-2 text-center mt-2">
                                 <button type="button" class="game-details-button bg-transparent orangered border-0">
                                     <i class="fas fa-info"></i>
@@ -98,36 +98,46 @@
                 <div class="game-detail-form form">
                     <div class="form-header row">
                         <div class="col-10 text-center mt-2 pt-1">Game details</div>
-                        <button id="game-details-close-button" type="button" class="col-2 close-button">
+                        <button type="button" class="game-details-close-button col-2 close-button">
                             <i class="fas fa-times-circle"></i>
                         </button>
                     </div>
                     <div class="p-2">
                         <div>
-                            <label><b>About:</b></label><br/>
+                            <label>
+                                <b>About:</b>
+                            </label><br/>
                             @game.Notes
                         </div>
                         <div>
-                            <label><b>Created:</b></label>
+                            <label>
+                                <b>Created:</b>
+                            </label>
                             @game.Created
                         </div>
                         <div>
-                            <label><b>City:</b></label>
+                            <label>
+                                <b>City:</b>
+                            </label>
                             @game.CityName
                         </div>
                         <div>
-                            <label><b>Pitch surface:</b></label>
+                            <label>
+                                <b>Pitch surface:</b>
+                            </label>
                             @game.SurfaceName
                         </div>
                         <div>
-                            <label><b>Uczestnicy:</b></label><br/>
+                            <label>
+                                <b>Uczestnicy:</b>
+                            </label><br/>
                             @foreach (var participant in participants)
-                                {
-                                    @participant.PlayerId
-                                    <br/>
-                                }
+                            {
+                                @participant.PlayerId
+                                <br/>
+                            }
                         </div>
-                        </div>
+                    </div>
                 </div>
             }
         </div>
