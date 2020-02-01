@@ -202,7 +202,8 @@
                         <button id="place-search" type="button" class="place-search">
                             <i class="fas fa-ellipsis-h"></i>
                         </button>
-                        <div id="selected-place-name">
+                        <div id="selected-place-name" class="text-center font-weight-bold mb-3">
+                            Event place is not chosen
                         </div>
                     </div>
                 </div>
@@ -223,9 +224,9 @@
     </div>
     <div class="p-2">
         <form method="post" id="post-select-place">
-            <input asp-for="_session.SelectedPlace.PlaceName" type="hidden"/>
+            <input asp-for="SelectedPlace.PlaceName" type="hidden"/>
             <div>
-                <select asp-for="_session.SelectedPlace.PlaceId" id="select-place-list" class="form-control" asp-items="ViewBag.SelectPlace"></select>
+                <select asp-for="SelectedPlace.PlaceId" id="select-place-list" class="form-control" asp-items="ViewBag.SelectPlace"></select>
             </div>
         </form>
         <div class="row">

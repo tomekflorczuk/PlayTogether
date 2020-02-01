@@ -229,15 +229,15 @@ $(document).ready(function() {
             type: "post",
             data: selectedplace,
             dataType: "json",
-            success: function(msg) {
-                if (msg === "") {
+            success: function(result) {
+                if (result.message === "") {
                 } else {
                     $("#select-place-form").hide();
                     $("#add-event-form").show();
-                    $("#notification").show().html(msg);
+                    $("#notification").show().html(result.message);
                     $("#notification").delay(3000).fadeOut("slow");
                 };
-                $("#selected-place-name").html();
+                $("#selected-place-name").html(result.placename);
             },
             headers:
             {

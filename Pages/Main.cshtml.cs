@@ -48,6 +48,7 @@ namespace PlayTogether.Pages
         [BindProperty] public List<Places> Places { get; set; }
         [BindProperty] public Games NewGame { get; set; }
         [BindProperty] public Places NewPlace { get; set; }
+        [BindProperty] public Places SelectedPlace { get; set; }
 
         //On page load
         public async Task<IActionResult> OnGetAsync(AppData session)
@@ -128,10 +129,10 @@ namespace PlayTogether.Pages
         }
 
         //SelectPlaceButton
-        public async Task<JsonResult> OnPostSelectPlace(Places selectedplace)
+        public async Task<JsonResult> OnPostSelectPlace(Places selectedplace)   
         {
             _session.SelectedPlace = selectedplace;
-            return new JsonResult("Wybrano miejsce wydarzenia");
+            return new JsonResult(new {placename = selectedplace.PlaceName, message = "Wybrano miejsce wydarzenia" });
         }
 
         //AddEventButton
