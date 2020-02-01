@@ -70,6 +70,7 @@ namespace PlayTogether.Pages
                             await SignInUser(macheduser.Login, false);
                             _session.LoggedId = macheduser.UserId;
                             _session.SelectedSportType = 0;
+                            _session.SelectedCity = 1;
                             return RedirectToPage("/Main", _session);
                         }
                         ModelState.AddModelError(string.Empty, "Account is inactive");
