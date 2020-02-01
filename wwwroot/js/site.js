@@ -236,7 +236,8 @@ $(document).ready(function() {
                     $("#add-event-form").show();
                     $("#notification").show().html(msg);
                     $("#notification").delay(3000).fadeOut("slow");
-                }
+                };
+                $("#selected-place-name").html();
             },
             headers:
             {
@@ -255,7 +256,9 @@ $(document).ready(function() {
             data: $("#post-add-game").serialize(),
             dataType: "json",
             success: function(msg) {
-                if (msg === "") {
+                if (msg === "" || msg === "Validation failed") {
+                    $("#notification").show().html(msg);
+                    $("#notification").delay(3000).fadeOut("slow");
                 } else {
                     $("#add-event-form").hide();
                     $("#notification").show().html(msg);

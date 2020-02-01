@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web;
 using System.Net.Http;
@@ -49,10 +48,9 @@ namespace PlayTogether.Pages
         [BindProperty] public List<Places> Places { get; set; }
         [BindProperty] public Games NewGame { get; set; }
         [BindProperty] public Places NewPlace { get; set; }
-        [BindProperty] public Places SelectedPlace { get; set; }
 
         //On page load
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(AppData session)
         {
             Player = await _context.Players.Include(u => u.Users)
                 .FirstOrDefaultAsync(m => m.PlayerId == _session.LoggedId);
@@ -132,7 +130,6 @@ namespace PlayTogether.Pages
         //SelectPlaceButton
         public async Task<JsonResult> OnPostSelectPlace(Places selectedplace)
         {
-            _session.SelectedPlace = selectedplace;
             return new JsonResult("Wybrano miejsce wydarzenia");
         }
 
@@ -158,6 +155,7 @@ namespace PlayTogether.Pages
                     }
                     catch (Exception ex)
                     {
+                        ModelState.AddModelError(string.Empty, "Validation failed");
                         return new JsonResult("Error while saving to database");
                     }
                 }
@@ -174,7 +172,6 @@ namespace PlayTogether.Pages
             try
             {
                 if (ModelState.GetFieldValidationState("NewPlace.PlaceName") == ModelValidationState.Valid)
-                {
                     try
                     {
                         _context.Places.Add(NewPlace);
@@ -185,13 +182,14 @@ namespace PlayTogether.Pages
                     {
                         return new JsonResult("Error while saving to database");
                     }
-                }
+
                 ModelState.AddModelError(string.Empty, "Invalid input");
             }
             catch (Exception ex)
             {
                 return new JsonResult("Unknown error");
             }
+
             return new JsonResult("");
         }
 
@@ -314,7 +312,8 @@ namespace PlayTogether.Pages
         //Sign up to a game
         public async Task<JsonResult> OnPostGameSignUp(int gameid)
         {
-            var participant = await _context.Participants.Where(p => p.PlayerId == _session.LoggedId && p.GameId == gameid).FirstOrDefaultAsync();
+            var participant = await _context.Participants
+                .Where(p => p.PlayerId == _session.LoggedId && p.GameId == gameid).FirstOrDefaultAsync();
 
             if (participant != null)
             {
@@ -332,6 +331,7 @@ namespace PlayTogether.Pages
                         return new JsonResult("Error while saving to database");
                     }
                 }
+
                 return new JsonResult("You are already signed to this game");
             }
 

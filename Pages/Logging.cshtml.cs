@@ -56,20 +56,21 @@ namespace PlayTogether.Pages
                 {
                     //Hashowanie hasła
                     var hashedpassword = Crypto.SHA256(Users.Password);
-                    //var logininfo = await _context.LoggingMethodAsync(Users.Login, hashedpassword, Users.Email);
-                    //Pobieranie użytkowników z pasującymi danymi logowania
+                    //Pobieranie z bazy danych użytkowników z pasującymi danymi logowania
                     var machedusers = await _context.Users.Where(u => u.Login == Users.Login || u.Email == Users.Email).ToListAsync();
                     machedusers = machedusers.Where(u => u.Password == hashedpassword).ToList();
                     //Sprawdzanie czy jest pasujący użytkownik
                     if (machedusers != null && machedusers.Any())
                     {
                         var macheduser = machedusers.First();
+                        //Sprawdzania czy użytkownik ma aktywne konto
                         if (macheduser.UserStatus == 'A')
                         {
+                            //Autoryzowanie użytkownika
                             await SignInUser(macheduser.Login, false);
                             _session.LoggedId = macheduser.UserId;
                             _session.SelectedSportType = 0;
-                            return RedirectToPage("/Main");
+                            return RedirectToPage("/Main", _session);
                         }
                         ModelState.AddModelError(string.Empty, "Account is inactive");
                         return Page();

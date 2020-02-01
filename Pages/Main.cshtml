@@ -36,7 +36,13 @@
                 var isParticipant = false;
                 <div class="game-component col-3 p-0 bg-orangered grey">
                     <div class="form-header">
-                        <div class="text-center pt-1 pb-1">Game</div>
+                        <div class="text-center pt-1 pb-1">
+                            @{
+                                var sportname = (await Model._context.SportTypes.SingleAsync(s => s.TypeId == game.GameType)).SportType;
+                                @sportname;
+                            }
+                            game
+                        </div>
                     </div>
                     <div class="p-2">
                         <div>
@@ -69,13 +75,8 @@
                             /@Html.DisplayFor(model => game.MaxPlayers)
                         </div>
                         <input class="upcoming-game-type" type="hidden" value="@game.GameType"/>
-                        <div class="row">
-                            <div class="col-5 mb-2">
-                                <button asp-page-handler="GameSignUp" type="button" class="sign-up-game-button btn bg-orangered" value="@game.GameId">
-                                    Sign in
-                                </button>
-                            </div>
-                            <div class="col-5 mb-2">
+                        <div class="row m-0">
+                            <div class="col-5 mb-2 text-center">
                                 @foreach (var participant in participants.Where(participant => participant.PlayerId == Model._session.LoggedId))
                                 {
                                     isParticipant = true;
@@ -84,6 +85,20 @@
                                 {
                                     <button asp-page-handler="GameSignOut" type="button" class="sign-out-game-button btn bg-orangered" value="@game.GameId">
                                         Sign out
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button asp-page-handler="GameSignUp" type="button" class="sign-up-game-button btn bg-orangered" value="@game.GameId">
+                                        Sign in
+                                    </button>
+                                }
+                            </div>
+                            <div class="col-5 mb-2 text-center">
+                                @if ((await Model._context.Users.SingleAsync(u => u.UserId == Model._session.LoggedId)).RoleId == 1)
+                                {
+                                    <button asp-page-handler="GameDeactive" type="button" class="sign-up-game-button btn bg-orangered" value="@game.GameId">
+                                        Deactive
                                     </button>
                                 }
                             </div>
@@ -187,10 +202,8 @@
                         <button id="place-search" type="button" class="place-search">
                             <i class="fas fa-ellipsis-h"></i>
                         </button>
-                        @if (@Html.DisplayFor(model => model.SelectedPlace.PlaceName) != null)
-                        {
-                            @Html.DisplayFor(model => model.SelectedPlace.PlaceName)
-                        }
+                        <div id="selected-place-name">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -210,9 +223,9 @@
     </div>
     <div class="p-2">
         <form method="post" id="post-select-place">
-            <input asp-for="SelectedPlace.PlaceName" type="hidden"/>
+            <input asp-for="_session.SelectedPlace.PlaceName" type="hidden"/>
             <div>
-                <select asp-for="SelectedPlace.PlaceId" id="select-place-list" class="form-control" asp-items="ViewBag.SelectPlace"></select>
+                <select asp-for="_session.SelectedPlace.PlaceId" id="select-place-list" class="form-control" asp-items="ViewBag.SelectPlace"></select>
             </div>
         </form>
         <div class="row">

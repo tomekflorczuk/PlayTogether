@@ -81,7 +81,7 @@ namespace PlayTogether.Models
     }
     public class GamesMetadata
     {
-        [Required]
+        [Required(ErrorMessage = "Game date is required")]
         [DataType(DataType.DateTime)]
         [Display(Name = "Game date")]
         public DateTime GameDate { get; set; }

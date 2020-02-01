@@ -373,6 +373,7 @@ body {
     border: solid orangered 0.2rem;
     border-radius: 1rem;
     background-color: rgba(66, 66, 66, 1);
+    z-index: 950;
 }
 
 #content #user-menu ul {
@@ -460,13 +461,15 @@ body {
 #content #user-details-form {
     display: none;
     position: fixed;
-    top: 10%;
-    left: 10%;
+    top: 3%;
+    left: 8%;
     width: 50%;
+    height: 90%;
     padding: 0;
     border: solid orangered 0.2rem;
     border-radius: 1rem;
     background-color: rgba(66, 66, 66, 1);
+    //overflow-y: scroll;
     z-index: 1000;
 }
 
@@ -506,7 +509,7 @@ body {
 #content #user-details-form #file-chooser { display: none; }
 
 #content .game-component {
-    width: 20%;
+    width: 15%;
     margin-left: 1rem;
     margin-top: 1rem;
     border: solid orangered 0.2rem;
