@@ -130,6 +130,7 @@ namespace PlayTogether.Pages
         //SelectPlaceButton
         public async Task<JsonResult> OnPostSelectPlace(Places selectedplace)
         {
+            _session.SelectedPlace = selectedplace;
             return new JsonResult("Wybrano miejsce wydarzenia");
         }
 
