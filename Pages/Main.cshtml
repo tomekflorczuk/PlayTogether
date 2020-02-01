@@ -34,7 +34,7 @@
                 var participants = await Model._context.Set<Participants>()
                     .FromSqlRaw("Call ListParticipantsInGame(@p0)", game.GameId).ToListAsync();
                 var isParticipant = false;
-                <div class="game-component col-3 p-0">
+                <div class="game-component col-3 p-0 bg-orangered grey">
                     <div class="form-header">
                         <div class="text-center pt-1 pb-1">Game</div>
                     </div>
@@ -88,7 +88,7 @@
                                 }
                             </div>
                             <div class="col-2 text-center mt-2">
-                                <button type="button" class="game-details-button bg-transparent orangered border-0">
+                                <button type="button" class="game-details-button bg-transparent border-0 grey">
                                     <i class="fas fa-info"></i>
                                 </button>
                             </div>

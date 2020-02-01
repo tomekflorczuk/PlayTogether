@@ -6,20 +6,20 @@ using System.Web;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PlayTogether.Models;
-using Microsoft.EntityFrameworkCore;
-using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
+using PlayTogether.Models;
 using PlayTogether.Data;
+using Google.Cloud.Storage.V1;
 
 namespace PlayTogether.Pages
 {
@@ -37,7 +37,8 @@ namespace PlayTogether.Pages
             _context = context;
             _session = session;
             _bucket = bucket.Value;
-            _storage = StorageClient.Create();
+            var credential = GoogleCredential.FromFile("google_credentials.json");
+            _storage = StorageClient.Create(credential);
         }
 
         //Properties
@@ -173,6 +174,7 @@ namespace PlayTogether.Pages
             try
             {
                 if (ModelState.GetFieldValidationState("NewPlace.PlaceName") == ModelValidationState.Valid)
+                {
                     try
                     {
                         _context.Places.Add(NewPlace);
@@ -183,13 +185,13 @@ namespace PlayTogether.Pages
                     {
                         return new JsonResult("Error while saving to database");
                     }
-
+                }
                 ModelState.AddModelError(string.Empty, "Invalid input");
             }
             catch (Exception ex)
             {
+                return new JsonResult("Unknown error");
             }
-
             return new JsonResult("");
         }
 
@@ -312,7 +314,7 @@ namespace PlayTogether.Pages
         //Sign up to a game
         public async Task<JsonResult> OnPostGameSignUp(int gameid)
         {
-            var participant = await _context.Participants.FirstOrDefaultAsync(p => p.PlayerId == _session.LoggedId);
+            var participant = await _context.Participants.Where(p => p.PlayerId == _session.LoggedId && p.GameId == gameid).FirstOrDefaultAsync();
 
             if (participant != null)
             {

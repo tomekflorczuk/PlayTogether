@@ -24,7 +24,7 @@ function checkTime(i) {
 $(document).ready(function() {
     //Wyświetlnie form zmiany hasła
     $("#reset-password-button").click(function() {
-        $("#reset-password-form").show();
+        $("#reset-password-form").fadeIn();
     });
     //Zmiana koloru oraz id wybranego sportu
     $("#football-button").click(function(e) {
@@ -140,23 +140,23 @@ $(document).ready(function() {
     });
     //Wyświetlenie menu usera
     $("#user-button").click(function() {
-        $("#user-menu").show();
+        $("#user-menu").fadeIn();
     });
     //Chowanie menu usera
     $(document).click(function(e) {
         if ($(e.target).closest("button").attr("id") !== "user-button" &&
             $(e.target).closest("div").attr("id") !== "user-menu") {
-            $("#user-menu").hide();
+            $("#user-menu").fadeOut();
         }
     });
     //Wyświetlanie szczegółów usera
     $("#user-details-button").click(function() {
-        $("#add-event-form").hide();
-        $("#user-details-form").show();
+        $("#add-event-form").fadeOut();
+        $("#user-details-form").fadeIn();
     });
     //Chowanie szczegółów usera
     $("#user-details-close-button").click(function() {
-        $("#user-details-form").hide();
+        $("#user-details-form").fadeOut();
     });
     //Zatwierdzenie szczegółów usera
     $("#user-details-confirm").click(function (e) {
@@ -275,32 +275,32 @@ $(document).ready(function() {
     });
     //Wyświetlanie menu dodawania wydarzenia
     $("#add-event-button").click(function() {
-        $("#user-details-form").hide();
-        $("#add-event-form").show();
+        $("#user-details-form").fadeOut();
+        $("#add-event-form").fadeIn();
     });
     //Wyświetlanie menu wyboru miejsca
     $("#place-search").click(function() {
-        $("#select-place-form").show();
-        $("#add-event-form").hide();
+        $("#select-place-form").fadeIn();
+        $("#add-event-form").fadeOut();
     });
     //Zamykanie menu wyboru miejsca
     $("#select-place-close-button").click(function() {
-        $("#select-place-form").hide();
-        $("#add-event-form").show();
+        $("#select-place-form").fadeOut();
+        $("#add-event-form").fadeIn();
     });
     //Wyświetlanie menu dodawania miejsca
     $("#add-place-button").click(function() {
-        $("#add-place-form").show();
-        $("#select-place-form").hide();
+        $("#add-place-form").fadeIn();
+        $("#select-place-form").fadeOut();
     });
     //Zamykanie menu dodawania miejsca
     $("#add-place-close-button").click(function() {
-        $("#select-place-form").show();
-        $("#add-place-form").hide();
+        $("#select-place-form").fadeIn();
+        $("#add-place-form").fadeOut();
     });
     //Zamykanie menu dodawania wydarzenia
     $("#add-event-close-button").click(function() {
-        $("#add-event-form").hide();
+        $("#add-event-form").fadeOut();
     });
     //Zapisywanie się do wydarzenia
     $(".sign-up-game-button").click(function(e) {
@@ -362,8 +362,8 @@ $(document).ready(function() {
             $(this).css("border", "solid greenyellow 0.2rem");
             $(this).find(".form-header").css("background-color", "greenyellow");
         } else if ($(this).find(".upcoming-game-type")[0].value === "2") {
-            $(this).css("border", "solid lightseagreen 0.2rem");
-            $(this).find(".form-header").css("background-color", "lightseagreen");
+            $(this).css("border", "solid cyan 0.2rem");
+            $(this).find(".form-header").css("background-color", "cyan");
         } else if ($(this).find(".upcoming-game-type")[0].value === "3"){
             $(this).css("border", "solid yellow 0.2rem");
             $(this).find(".form-header").css("background-color", "yellow");

@@ -54,17 +54,21 @@ namespace PlayTogether.Pages
                 if ((ModelState.GetFieldValidationState("Users.Login") == ModelValidationState.Valid || ModelState.GetFieldValidationState("Users.Email") == ModelValidationState.Valid) &
                     (ModelState.GetFieldValidationState("Users.Password") == ModelValidationState.Valid))
                 {
+                    //Hashowanie hasła
                     var hashedpassword = Crypto.SHA256(Users.Password);
-                    var logininfo = await _context.LoggingMethodAsync(Users.Login,
-                        hashedpassword, Users.Email);
-
-                    if (logininfo != null && logininfo.Any())
+                    //var logininfo = await _context.LoggingMethodAsync(Users.Login, hashedpassword, Users.Email);
+                    //Pobieranie użytkowników z pasującymi danymi logowania
+                    var machedusers = await _context.Users.Where(u => u.Login == Users.Login || u.Email == Users.Email).ToListAsync();
+                    machedusers = machedusers.Where(u => u.Password == hashedpassword).ToList();
+                    //Sprawdzanie czy jest pasujący użytkownik
+                    if (machedusers != null && machedusers.Any())
                     {
-                        var logindetails = logininfo.First();
-                        if (logindetails.UserStatus == 'A')
+                        var macheduser = machedusers.First();
+                        if (macheduser.UserStatus == 'A')
                         {
-                            await SignInUser(logindetails.Login, false);
-                            _session.LoggedId = logindetails.UserId;
+                            await SignInUser(macheduser.Login, false);
+                            _session.LoggedId = macheduser.UserId;
+                            _session.SelectedSportType = 0;
                             return RedirectToPage("/Main");
                         }
                         ModelState.AddModelError(string.Empty, "Account is inactive");
@@ -107,22 +111,32 @@ namespace PlayTogether.Pages
             {
                 if (ModelState.IsValid)
                 {
+                    //Checking for duplicates
+                    if (await _context.Users.Where(p => p.Login == Users.Login).AnyAsync())
+                    {
+                        ModelState.AddModelError(string.Empty, "Login is already in use");
+                        return Page();
+                    }
+                    if (await _context.Users.Where(p => p.Email == Users.Email).AnyAsync())
+                    {
+                        ModelState.AddModelError(string.Empty, "Email address is already in use");
+                        return Page();
+                    }
+                    /*
                     var loginduplicate = await _context.Set<Models.Users>().FromSqlRaw("CALL CheckLoginDuplicate (@p0)", parameters: new[] {Users.Login}).ToListAsync();
                     var mailduplicate = await _context.Set<Models.Users>().FromSqlRaw("CALL CheckEmailDuplicate (@p0)", parameters: new[] {Users.Email}).ToListAsync();
-
-
                     if (loginduplicate.Any())
                     {
                         ModelState.AddModelError(string.Empty, "Login is already in use");
                         return Page();
                     }
-
+                    
                     if (mailduplicate.Any())
                     {
                         ModelState.AddModelError(string.Empty, "Email address is already in use");
                         return Page();
                     }
-
+                    */
                     _context.Players.Add(Players);
                     await _context.SaveChangesAsync();
                     var playerid = _context.Players.OrderByDescending(p => p.PlayerId).FirstOrDefault();

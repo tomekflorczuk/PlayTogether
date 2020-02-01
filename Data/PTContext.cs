@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
@@ -538,12 +539,13 @@ namespace PlayTogether.Data
             var list = new List<Users>();
             try
             {
-                list = await Set<Users>().FromSqlRaw("CALL Logging (@p0, @p1, @p2)", new[] {plogin, ppassword, pmail})
-                    .ToListAsync();
+                list = await Users.Where(u => u.Login == plogin && u.Email == pmail).ToListAsync();
+                list = list.Where(u => u.Password == ppassword).ToList();
+                //list = await Set<Users>().FromSqlRaw("CALL Logging (@p0, @p1, @p2)", new[] {plogin, ppassword, pmail}).ToListAsync();
             }
             catch (Exception ex)
             {
-                throw ex;
+                
             }
             return list;
         }
