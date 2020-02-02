@@ -22,7 +22,7 @@
             <form method="post">
                 @Html.AntiForgeryToken()
                 <div class="form-group">
-                    <label asp-for="Users.Login"></label>
+                    <label>Username or email address</label>
                     <input asp-for="Users.Login" class="form-control bar" />
                     <span asp-validation-for="Users.Login"></span>
                 </div>

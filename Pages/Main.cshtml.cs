@@ -79,7 +79,7 @@ namespace PlayTogether.Pages
             //Places = await _context.Set<Places>().FromSqlRaw("CALL ListPlaces(@p0)", _session.SelectedCity).ToListAsync();
 
             //return new JsonResult(Places);
-            return new JsonResult("City changed");
+            return new JsonResult("City selected");
         }
 
         //Clicking FootballButton
@@ -91,7 +91,7 @@ namespace PlayTogether.Pages
                 .FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity)
                 .ToListAsync();
             */
-            return new JsonResult("Chosen football");
+            return new JsonResult("Football selected");
         }
 
         //Clicking BasketballButton
@@ -103,7 +103,7 @@ namespace PlayTogether.Pages
                 .FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity)
                 .ToListAsync();
             */
-            return new JsonResult("Chosen basketball");
+            return new JsonResult("Basketball selected");
         }
 
         //Clicking VolleyballButton
@@ -115,7 +115,7 @@ namespace PlayTogether.Pages
                 .FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity)
                 .ToListAsync();
             */
-            return new JsonResult("Chosen volleyball");
+            return new JsonResult("Volleyball selected");
         }
 
         //SignOutButton
