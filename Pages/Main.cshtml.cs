@@ -86,9 +86,11 @@ namespace PlayTogether.Pages
         public async Task<JsonResult> OnPostFootballButton()
         {
             _session.SelectedSportType = 1;
+            /*
             UpcomingGames = await _context.Set<UpcomingGame>()
                 .FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity)
                 .ToListAsync();
+            */
             return new JsonResult("Chosen football");
         }
 
@@ -96,9 +98,11 @@ namespace PlayTogether.Pages
         public async Task<JsonResult> OnPostBasketballButton()
         {
             _session.SelectedSportType = 2;
+            /*
             UpcomingGames = await _context.Set<UpcomingGame>()
                 .FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity)
                 .ToListAsync();
+            */
             return new JsonResult("Chosen basketball");
         }
 
@@ -106,9 +110,11 @@ namespace PlayTogether.Pages
         public async Task<JsonResult> OnPostVolleyballButton()
         {
             _session.SelectedSportType = 3;
+            /*
             UpcomingGames = await _context.Set<UpcomingGame>()
                 .FromSqlRaw("CALL UpcomingGames (@p0, @p1)", _session.SelectedSportType, _session.SelectedCity)
                 .ToListAsync();
+            */
             return new JsonResult("Chosen volleyball");
         }
 

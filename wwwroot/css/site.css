@@ -95,9 +95,9 @@ body {
 /*SideBar Styling*/
 
 #title-container {
-    width: 100vw;
+    width: 100%;
     text-align: center;
-    padding: 1.2rem 0 2.6rem 0;
+    padding: 1.2rem 0 1.8rem 0;
 }
 
 #title-container .title {
@@ -106,10 +106,9 @@ body {
     background: linear-gradient(to right, rgba(255, 136, 0, 1) 0, rgba(255, 85, 0, 1) 39%, rgba(255, 0, 0, 1) 100%);
     -webkit-background-clip: text;
     font-family: Tahoma, Geneva, sans-serif;
-    font-size: 2rem;
     font-style: italic;
     font-weight: bolder;
-    font-size: 3.7rem;
+    font-size: 3.2rem;
 }
 
 #login-container {
