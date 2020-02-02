@@ -14,14 +14,12 @@ namespace PlayTogether.Models
         [Required(ErrorMessage = "Login is required")]
         [DataType(DataType.Text)]
         [Display(Name = "Username")]
-        [MinLength(1)]
         [MaxLength(20, ErrorMessage = "Your login is too long, it should be maximum 20 characters long")]
         public string Login { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         [Display(Name= "Password")]
-        [MinLength(1)]
         [MaxLength(25, ErrorMessage = "Your password is too long, it should be maximum 25 characters long ")]
         public string Password { get; set; }
         
@@ -31,7 +29,6 @@ namespace PlayTogether.Models
         [RegularExpression("^([a-zA-Z0-9_\\.\\-]+)@([a-zA-Z0-9-]+.)[a-zA-Z]{2,6}$", 
             ErrorMessage = "Invalid format of email address")]
         [Display(Name = "E-mail address")]
-        [MinLength(5)]
         [MaxLength(30, ErrorMessage = "Your e-mail is too long, it should be maximum 30 characters long")]
         public string Email { get; set; }
 

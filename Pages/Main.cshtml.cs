@@ -315,7 +315,7 @@ namespace PlayTogether.Pages
         public async Task<JsonResult> OnPostGameSignUp(int gameid)
         {
             var participant = await _context.Participants
-                .Where(p => p.PlayerId == _session.LoggedId && p.GameId == gameid).FirstOrDefaultAsync();
+                .SingleAsync(p => p.PlayerId == _session.LoggedId && p.GameId == gameid);
 
             if (participant != null)
             {
@@ -355,18 +355,23 @@ namespace PlayTogether.Pages
         //Sign out of a game
         public async Task<JsonResult> OnPostGameSignOut(int gameid)
         {
-            var participant = await _context.Participants.FirstOrDefaultAsync(p => p.PlayerId == _session.LoggedId);
-            _context.Attach(participant).State = EntityState.Modified;
-            try
+            var participant = await _context.Participants.SingleAsync(p => p.PlayerId == _session.LoggedId && p.GameId == gameid);
+
+            if (participant != null)
             {
-                participant.ParticipantStatus = "U";
-                await _context.SaveChangesAsync();
-                return new JsonResult("You were signed out of the game");
+                _context.Attach(participant).State = EntityState.Modified;
+                try
+                {
+                    participant.ParticipantStatus = "U";
+                    await _context.SaveChangesAsync();
+                    return new JsonResult("You were signed out of the game");
+                }
+                catch (Exception ex)
+                {
+                    return new JsonResult("Error while saving to database");
+                }
             }
-            catch (Exception ex)
-            {
-                return new JsonResult("Error while saving to database");
-            }
+            return new JsonResult("You were not signed to this game");
         }
     }
 }

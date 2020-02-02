@@ -57,13 +57,11 @@ namespace PlayTogether.Pages
                     //Hashowanie hasła
                     var hashedpassword = Crypto.SHA256(Users.Password);
                     //Pobieranie z bazy danych użytkowników z pasującymi danymi logowania
-                    var machedusers = await _context.Users.Where(u => u.Login == Users.Login || u.Email == Users.Email).ToListAsync();
-                    machedusers = machedusers.Where(u => u.Password == hashedpassword).ToList();
+                    var macheduser = await _context.Users.SingleAsync(u => u.Login == Users.Login || u.Email == Users.Email);
                     //Sprawdzanie czy jest pasujący użytkownik
-                    if (machedusers != null && machedusers.Any())
+                    if (macheduser != null && macheduser.Password == hashedpassword)
                     {
-                        var macheduser = machedusers.First();
-                        //Sprawdzania czy użytkownik ma aktywne konto
+                        //Sprawdzanie czy użytkownik ma aktywne konto
                         if (macheduser.UserStatus == 'A')
                         {
                             //Autoryzowanie użytkownika
@@ -124,37 +122,30 @@ namespace PlayTogether.Pages
                         ModelState.AddModelError(string.Empty, "Email address is already in use");
                         return Page();
                     }
-                    /*
-                    var loginduplicate = await _context.Set<Models.Users>().FromSqlRaw("CALL CheckLoginDuplicate (@p0)", parameters: new[] {Users.Login}).ToListAsync();
-                    var mailduplicate = await _context.Set<Models.Users>().FromSqlRaw("CALL CheckEmailDuplicate (@p0)", parameters: new[] {Users.Email}).ToListAsync();
-                    if (loginduplicate.Any())
+
+                    try
                     {
-                        ModelState.AddModelError(string.Empty, "Login is already in use");
-                        return Page();
+                        _context.Players.Add(Players);
+                        await _context.SaveChangesAsync();
+                        var playerid = _context.Players.OrderByDescending(p => p.PlayerId).FirstOrDefault();
+                        Users.Password = Crypto.SHA256(Users.Password);
+                        Users.PlayerId = playerid.PlayerId;
+                        _context.Users.Add(Users);
+                        await _context.SaveChangesAsync();
+                        await SignInUser(Users.Login, false);
+                        _session.LoggedId = Users.UserId;
+                        return RedirectToPage("/Main");
                     }
-                    
-                    if (mailduplicate.Any())
+                    catch (Exception ex)
                     {
-                        ModelState.AddModelError(string.Empty, "Email address is already in use");
-                        return Page();
+                        ModelState.AddModelError(string.Empty, "Error while saving to database");
                     }
-                    */
-                    _context.Players.Add(Players);
-                    await _context.SaveChangesAsync();
-                    var playerid = _context.Players.OrderByDescending(p => p.PlayerId).FirstOrDefault();
-                    Users.Password = Crypto.SHA256(Users.Password);
-                    Users.PlayerId = playerid.PlayerId;
-                    _context.Users.Add(Users);
-                    await _context.SaveChangesAsync();
-                    await SignInUser(Users.Login, false);
-                    _session.LoggedId = Users.UserId;
-                    return RedirectToPage("/Main");
                 }
                 ModelState.AddModelError(string.Empty,"Validation failed");
             }
             catch (Exception ex)
             {
-                throw ex;
+                ModelState.AddModelError(string.Empty, "Unknown error");
             }
             return Page();
         }
