@@ -6,6 +6,10 @@
 # Google credentials file
 google_credentials.json
 
+#Database passwords
+appsetting.Development.json
+appsetting.Production.json
+
 # User-specific files
 *.rsuser
 *.suo
